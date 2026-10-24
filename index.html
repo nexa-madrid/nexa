@@ -348,7 +348,7 @@
           <p class="text-lg text-nexa-ink/70 leading-relaxed">Centralizamos todas las herramientas que necesitas para gestionar tu llegada, documentos y vida estudiantil sin contratiempos.</p>
         </div>
 
-        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <article class="bg-white rounded-3xl p-7 border border-black/5 hover:-translate-y-1 hover:shadow-lg transition">
             <span class="w-14 h-14 rounded-2xl bg-nexa-orangeSoft text-nexa-orangeDark flex items-center justify-center"><i data-lucide="square-check-big" class="!w-6 !h-6"></i></span>
             <h3 class="mt-8 text-xl font-extrabold">Organizador de trámites</h3>
@@ -368,6 +368,16 @@
             <span class="w-14 h-14 rounded-2xl bg-red-50 text-nexa-sos flex items-center justify-center"><i data-lucide="life-buoy" class="!w-6 !h-6"></i></span>
             <h3 class="mt-8 text-xl font-extrabold">Soporte y ayuda</h3>
             <p class="mt-3 text-sm text-nexa-ink/70 leading-relaxed">Acceso rápido a guías, SOS y contacto directo con el equipo.</p>
+          </article>
+          <article class="bg-white rounded-3xl p-7 border border-black/5 hover:-translate-y-1 hover:shadow-lg transition">
+            <span class="w-14 h-14 rounded-2xl bg-pink-50 text-[#A4467F] flex items-center justify-center"><i data-lucide="messages-square" class="!w-6 !h-6"></i></span>
+            <h3 class="mt-8 text-xl font-extrabold">Comunidad</h3>
+            <p class="mt-3 text-sm text-nexa-ink/70 leading-relaxed">Comparte recomendaciones, encuentra roomie y aprende de quienes ya vivieron Madrid.</p>
+          </article>
+          <article class="bg-white rounded-3xl p-7 border border-black/5 hover:-translate-y-1 hover:shadow-lg transition">
+            <span class="w-14 h-14 rounded-2xl bg-nexa-beige text-nexa-ink flex items-center justify-center"><i data-lucide="tram-front" class="!w-6 !h-6"></i></span>
+            <h3 class="mt-8 text-xl font-extrabold">Transporte</h3>
+            <p class="mt-3 text-sm text-nexa-ink/70 leading-relaxed">Tu tarjeta, el metro, los buses y las apps que usarás cada día, explicados en corto.</p>
           </article>
         </div>
 
@@ -770,8 +780,8 @@
       <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="home"><i data-lucide="messages-square" class="!w-6 !h-6 text-nexa-orange"></i> Inicio</button>
       <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="setup"><i data-lucide="circle-check" class="!w-6 !h-6 text-nexa-orange"></i> My Setup</button>
       <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="transporte"><i data-lucide="tram-front" class="!w-6 !h-6 text-nexa-orange"></i> Transporte</button>
-      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="alojamiento"><i data-lucide="house" class="!w-6 !h-6 text-nexa-orange"></i> Alojamiento</button>
       <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="map"><i data-lucide="map" class="!w-6 !h-6 text-nexa-orange"></i> Student Map</button>
+      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="alojamiento"><i data-lucide="house" class="!w-6 !h-6 text-nexa-orange"></i> Alojamiento</button>
       <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="ask"><i data-lucide="bot" class="!w-6 !h-6 text-nexa-orange"></i> Ask IA</button>
       <button class="open-sos flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl bg-red-50 hover:bg-red-100 font-extrabold text-nexa-sos"><i data-lucide="shield-alert" class="!w-6 !h-6"></i> SOS</button>
     </nav>
@@ -3622,7 +3632,9 @@
   const syncPostForm = () => {
     const cat = $('#postForm').cat.value;
     $('#roomieFields').classList.toggle('hidden', cat !== 'roomies');
-    $('#postForm').body.placeholder = POST_HINTS[cat] || '';
+    const hint = POST_HINTS[cat] || '', body = $('#postForm').body;
+    Translator.origAttr.set(body, { placeholder: hint }); // así el traductor conoce el texto de ayuda nuevo
+    body.placeholder = Translator.t(hint);
   };
   $('#postForm').cat.addEventListener('change', syncPostForm);
   $('#openShare').addEventListener('click', syncPostForm);
@@ -4592,6 +4604,188 @@
     [`Bienvenidx a NEXA 👋`, `Welcome to NEXA 👋`], [`Todo lo que necesitas para instalarte en Madrid, en un solo lugar.`, `Everything you need to settle in Madrid, in one place.`],
     [`Tus trámites paso a paso.`, `Your paperwork, step by step.`], [`Lugares útiles cerca de ti.`, `Useful places near you.`],
     [`Pregúntale a la IA lo que sea.`, `Ask the AI anything.`], [`Experiencias de otros estudiantes.`, `Experiences from other students.`],
+    /* Inicio, comunidad y Mi perfil */
+    [`Bienvenidx a NEXA, tu comunidad en Madrid.`, `Welcome to NEXA, your community in Madrid.`], [`Editar perfil`, `Edit profile`], [`Publicaciones`, `Posts`], [`Publicación`, `Post`],
+    [`Tareas`, `Tasks`], [`Etapa actual`, `Current stage`], [`Sobre mí`, `About me`], [`Intercambio en`, `Exchange at`], [`Estudia`, `Studies`], [`Vive en`, `Lives in`],
+    [`Mis gustos`, `My interests`], [`Ver mi perfil completo`, `See my full profile`], [`Ver mi perfil`, `See my profile`], [`Todo`, `All`], [`Recomendaciones`, `Recommendations`], [`Trámites`, `Paperwork`],
+    [`Busco roomie`, `Looking for a roomie`], [`Comparte algo con la comunidad...`, `Share something with the community...`], [`Recomendación`, `Recommendation`],
+    [`· Ver en el mapa`, `· See on the map`], [`Ver en TikTok`, `Watch on TikTok`], [`Ver en Instagram`, `Watch on Instagram`], [`Ver en X`, `See on X`], [`Ver video`, `Watch video`],
+    [`Escribe un comentario...`, `Write a comment...`], [`Escribe un comentario`, `Write a comment`], [`Enviar comentario`, `Send comment`], [`¡Guardadísimo! Voy este finde 🙌`, `Saved! Going this weekend 🙌`],
+    [`Likes recibidos`, `Likes received`], [`Me gustaron`, `Liked`], [`Tareas hechas`, `Tasks done`], [`Mis publicaciones`, `My posts`], [`Volver a Inicio`, `Back to Home`],
+    [`Aún no has publicado nada`, `You haven't posted anything yet`], [`Comparte una recomendación, busca roomie o cuenta tu experiencia.`, `Share a recommendation, look for a roomie or tell your story.`],
+    [`Crear mi primera publicación`, `Create my first post`], [`Aún no te ha gustado nada`, `You haven't liked anything yet`], [`Toca el ❤️ en las publicaciones de Inicio y aparecerán aquí.`, `Tap ❤️ on posts in Home and they'll show up here.`],
+    [`Aún no tienes bio. Cuéntale a la comunidad quién eres ✨`, `No bio yet. Tell the community who you are ✨`], [`Añade qué estudias, tu barrio y tus fechas en «Editar perfil».`, `Add what you study, your neighbourhood and your dates in “Edit profile”.`],
+    [`Elige tus gustos en «Editar perfil».`, `Pick your interests in “Edit profile”.`], [`Cambiar foto de perfil`, `Change profile photo`], [`Cambiar foto`, `Change photo`], [`Contenido del perfil`, `Profile content`],
+    [`Estudiante de Marketing del Tec 🇲🇽 de intercambio en Madrid. Busco gente para ir a museos y probar todos los cafés de la ciudad.`, `Marketing student from Tec 🇲🇽 on exchange in Madrid. Looking for people to go to museums with and try every café in the city.`],
+    [`Marketing`, `Marketing`], [`Chamberí`, `Chamberí`],
+    [`☕ Café`, `☕ Coffee`], [`✈️ Viajar`, `✈️ Travel`], [`🎨 Museos`, `🎨 Museums`], [`🍷 Tapas`, `🍷 Tapas`], [`⚽ Fútbol`, `⚽ Football`], [`🎵 Música`, `🎵 Music`],
+    [`🪩 Fiesta`, `🪩 Partying`], [`🏃 Deporte`, `🏃 Sports`], [`📸 Fotografía`, `📸 Photography`], [`📚 Leer`, `📚 Reading`], [`🍳 Cocinar`, `🍳 Cooking`], [`🌿 Naturaleza`, `🌿 Nature`],
+    [`🇲🇽 México`, `🇲🇽 Mexico`], [`🇵🇪 Perú`, `🇵🇪 Peru`], [`🇧🇷 Brasil`, `🇧🇷 Brazil`], [`🇫🇷 Francia`, `🇫🇷 France`], [`🇨🇦 Canadá`, `🇨🇦 Canada`], [`🇮🇹 Italia`, `🇮🇹 Italy`], [`🇩🇪 Alemania`, `🇩🇪 Germany`],
+    [`MI PERFIL`, `MY PROFILE`], [`¿Qué estudias?`, `What do you study?`], [`Barrio en Madrid`, `Neighbourhood in Madrid`], [`Fechas del intercambio`, `Exchange dates`], [`Idiomas`, `Languages`],
+    [`(elige los que quieras)`, `(pick as many as you like)`], [`Guardar perfil`, `Save profile`], [`Cuéntale a la comunidad quién eres y qué te gusta de Madrid...`, `Tell the community who you are and what you love about Madrid...`],
+    [`Ej. Marketing`, `E.g. Marketing`], [`Ej. Chamberí`, `E.g. Chamberí`], [`Ej. Sep 2026 – Ene 2027`, `E.g. Sep 2026 – Jan 2027`], [`Ej. Español, Inglés`, `E.g. Spanish, English`],
+    [`Elige un color o sube tu propia foto.`, `Pick a colour or upload your own photo.`], [`Subir mi foto de portada`, `Upload my cover photo`], [`Cielo`, `Sky`], [`Atardecer`, `Sunset`], [`Noche`, `Night`],
+    [`Perfil actualizado.`, `Profile updated.`], [`Portada actualizada.`, `Cover updated.`], [`Foto actualizada.`, `Photo updated.`],
+    [`COMUNIDAD`, `COMMUNITY`], [`Nueva publicación`, `New post`], [`Tema`, `Topic`], [`Busco roomie (compañerx de piso)`, `Looking for a roomie (flatmate)`],
+    [`Fechas, zona y presupuesto`, `Dates, area and budget`], [`Desde`, `From`], [`Hasta`, `Until`], [`Zona`, `Area`], [`Presupuesto (€/mes)`, `Budget (€/month)`], [`Ej. Sol`, `E.g. Sol`], [`Ej. 500`, `E.g. 500`],
+    [`Tip: abajo puedes subir fotos o un video de tu resi o piso 👇`, `Tip: you can upload photos or a video of your residence or flat below 👇`], [`Tu publicación`, `Your post`],
+    [`Fotos`, `Photos`], [`(opcional · hasta 4)`, `(optional · up to 4)`], [`Añadir`, `Add`], [`Subir fotos`, `Upload photos`], [`Enlace a tu video`, `Link to your video`],
+    [`(opcional · TikTok, Instagram o X)`, `(optional · TikTok, Instagram or X)`], [`Publicar`, `Post`], [`¡Gracias! Tu publicación ya está en la comunidad.`, `Thanks! Your post is now live in the community.`],
+    [`Recomienda un lugar, un plan o un truco que te encantó...`, `Recommend a place, a plan or a trick you loved...`], [`Cuéntanos cómo encontraste piso, qué te funcionó y qué evitarías...`, `Tell us how you found a flat, what worked and what you'd avoid...`],
+    [`Comparte cómo te fue con tu trámite y qué documentos llevaste...`, `Share how your paperwork went and which documents you took...`], [`Cuéntanos tu experiencia con el abono, metro o bus...`, `Tell us about your experience with the pass, metro or bus...`],
+    [`Cuéntanos qué buscas y cómo eres: horarios, hábitos, si eres tranquilx...`, `Tell us what you're looking for and what you're like: schedule, habits, whether you're quiet...`],
+    [`Comer barato en Malasaña`, `Cheap eats in Malasaña`], [`Atardecer en Debod`, `Sunset at Debod`], [`Picnic en el Retiro`, `Picnic in the Retiro`], [`Abono Joven en 5 minutos`, `Youth Pass in 5 minutes`],
+    [`Barrios para estudiantes en Madrid`, `Student neighbourhoods in Madrid`], [`Tour de mi piso en Moncloa`, `Tour of my flat in Moncloa`], [`Mi resi en Chamberí`, `My residence in Chamberí`], [`Tour de mi piso`, `My flat tour`], [`Mi video`, `My video`],
+    [`Mi lugar favorito para comer rico y barato: el Mercado de San Ildefonso. Tiene puestos de todo el mundo y una terraza arriba. Hice un video con lo que pedí 👉`, `My favourite spot for good, cheap food: the Mercado de San Ildefonso. It has stalls from all over the world and a terrace upstairs. I made a video of what I ordered 👉`],
+    [`Si necesitas desconectarte un rato, ve al atardecer al Templo de Debod. Es gratis y tiene las mejores vistas de Madrid 🌅 Grabé el atardecer para que vean.`, `If you need to switch off for a while, go to the Temple of Debod at sunset. It's free and has the best views in Madrid 🌅 I filmed the sunset so you can see.`],
+    [`Domingo perfecto: café para llevar y picnic en el Retiro, al lado del Palacio de Cristal. En el video les enseño el mejor rincón para sentarse ☕`, `Perfect Sunday: coffee to go and a picnic in the Retiro, next to the Crystal Palace. In the video I show you the best spot to sit ☕`],
+    [`Ya tengo mi TIE 🎉 Fui a la comisaría de Policía Nacional del centro. Lleguen 15 minutos antes, con el EX-17 impreso, la tasa pagada y una foto tamaño carné.`, `I got my TIE 🎉 I went to the National Police station in the centre. Arrive 15 minutes early with the EX-17 printed, the fee paid and a passport-size photo.`],
+    [`Subí un reel explicando cómo pedir el Abono Joven desde el celular en 5 minutos, con capturas de cada paso.`, `I posted a reel explaining how to request the Youth Pass from your phone in 5 minutes, with screenshots of every step.`],
+    [`Hilo con los barrios que más recomiendo para estudiantes y cuánto pagué de habitación en cada uno.`, `Thread with the neighbourhoods I recommend most for students and how much I paid for a room in each one.`],
+    [`Busco roomie (chica) para rentar juntas un piso de 2 habitaciones cerca de Sol. Soy tranquila, ordenada y me encanta cocinar 🍳 ¡Escríbeme!`, `Looking for a roomie (girl) to rent a 2-bedroom flat together near Sol. I'm quiet, tidy and love cooking 🍳 Message me!`],
+    [`Se libera una habitación en mi piso compartido en Moncloa, a 5 min del metro. Somos 3 estudiantes internacionales. Les dejo un tour en video 👉`, `A room is opening up in my shared flat in Moncloa, 5 min from the metro. We're 3 international students. Here's a video tour 👉`],
+    [`Estoy en una residencia en Chamberí y busco compañera para habitación doble el segundo semestre. Así se ve la resi 👉`, `I'm in a residence in Chamberí and looking for a roommate for a double room next semester. This is what it looks like 👉`],
+    [`¡Cuidado con los pagos por adelantado! No transfieras fianza a propietarios sin contrato firmado con DNI/NIE verificado. Yo reservé los primeros 7 días en un hostel cerca de Gran Vía y visité 4 pisos en persona. Elegí Chamberí y estoy a 15 min en metro de todo.`, `Watch out for upfront payments! Don't transfer a deposit to landlords without a signed contract and a verified DNI/NIE. I booked a hostel near Gran Vía for my first 7 days and visited 4 flats in person. I chose Chamberí and I'm 15 min by metro from everything.`],
+    [`Para la cita de huellas (TIE) en Madrid: las comisarías liberan citas casi siempre los viernes por la mañana sobre las 09:30 o miércoles a primera hora. Ten tus datos en un bloc de notas para hacer 'copy-paste' súper rápido porque se agotan en 3 minutos.`, `For the fingerprint appointment (TIE) in Madrid: police stations usually release slots on Friday mornings around 09:30 or first thing on Wednesdays. Keep your details in a notes app to copy-paste super fast, because they're gone in 3 minutes.`],
+    [`El Abono Joven de 20€ al mes es la maravilla más grande de Madrid. No solo te sirve para metro y autobús urbano; también puedes tomar los trenes de Cercanías para irte a pasar el día a Alcalá de Henares, San Lorenzo de El Escorial o Aranjuez sin pagar ni un céntimo extra.`, `The €20-a-month Youth Pass is the best thing in Madrid. It's not just for the metro and city buses; you can also take Cercanías trains for day trips to Alcalá de Henares, San Lorenzo de El Escorial or Aranjuez without paying a cent more.`],
+    [`Para estudiar con calma: la biblioteca María Zambrano en Moncloa abre en época de exámenes 24 horas y tiene un café excelente. Además, guarda tu carnet universitario: el Museo del Prado y el Centro de Arte Reina Sofía son 100% gratuitos para estudiantes.`, `To study in peace: the María Zambrano library in Moncloa opens 24 hours during exams and has excellent coffee. Also, keep your student card handy: the Prado Museum and the Reina Sofía Art Centre are 100% free for students.`],
+
+    /* My Setup: detalle visual de las tareas */
+    [`Checklist`, `Checklist`], [`Cuándo`, `When`], [`Dónde`, `Where`], [`Respuesta`, `Answer`], [`Costo`, `Cost`], [`Tus documentos`, `Your documents`],
+    [`Toca cada documento cuando ya lo tengas.`, `Tap each document once you have it.`], [`Paso a paso`, `Step by step`], [`Toca un paso para marcar hasta dónde vas.`, `Tap a step to mark how far you've got.`],
+    [`hecho`, `done`], [`Tus opciones`, `Your options`], [`Tu checklist`, `Your checklist`], [`Toca lo que ya hiciste.`, `Tap what you've already done.`],
+    [`60–90 días antes del vuelo`, `60–90 days before your flight`], [`Consulado de España en tu país`, `Spanish consulate in your country`], [`Aprox. 1 mes`, `About 1 month`], [`Tasa consular (varía por país)`, `Consular fee (varies by country)`],
+    [`Formulario de solicitud`, `Application form`], [`Visado nacional, lleno y firmado`, `National visa form, filled in and signed`], [`Pasaporte`, `Passport`], [`Vigente toda tu estancia`, `Valid for your whole stay`],
+    [`Foto tamaño pasaporte`, `Passport-size photo`], [`Reciente y con fondo blanco`, `Recent, with a white background`], [`Carta de admisión`, `Acceptance letter`], [`De tu universidad en España`, `From your university in Spain`],
+    [`Medios económicos`, `Proof of funds`], [`100 % del IPREM por cada mes`, `100% of IPREM for each month`], [`Seguro médico`, `Health insurance`], [`Sin copagos ni carencias`, `No co-pays or waiting periods`],
+    [`Antecedentes penales`, `Criminal record check`], [`Apostillado (más de 180 días)`, `Apostilled (stays over 180 days)`], [`Certificado médico`, `Medical certificate`], [`Para estancias de más de 180 días`, `For stays over 180 days`],
+    [`Pago de la tasa`, `Fee payment`], [`Justificante del pago`, `Proof of payment`],
+    [`Revisa los requisitos`, `Check the requirements`], [`Entra a la web de tu consulado: pueden cambiar según el país.`, `Visit your consulate's website: they can vary by country.`], [`Reúne tus documentos`, `Gather your documents`],
+    [`Con apostillas y traducciones juradas cuando las pidan.`, `With apostilles and sworn translations when required.`], [`Pide tu cita`, `Book your appointment`], [`En el consulado o en su centro de solicitudes (por ejemplo, BLS).`, `At the consulate or its application centre (for example, BLS).`],
+    [`Ve a tu cita`, `Go to your appointment`], [`Lleva originales y copias, y paga la tasa ahí.`, `Bring originals and copies, and pay the fee there.`], [`Recoge tu visado`, `Pick up your visa`],
+    [`Revisa que tu NIE venga en la etiqueta del visado. ¡Listo para volar!`, `Check your NIE is printed on the visa sticker. Ready to fly!`],
+    [`Antes de pedir la visa`, `Before applying for the visa`], [`Online o en la aseguradora`, `Online or at the insurer`], [`Debe ser`, `Must be`], [`Incluye`, `Includes`], [`Repatriación`, `Repatriation`],
+    [`Para contratar la póliza`, `To take out the policy`], [`Con las fechas de tu estancia`, `With the dates of your stay`], [`Dirección en España`, `Address in Spain`], [`Si ya la tienes`, `If you already have it`],
+    [`Tarjeta o cuenta`, `Card or account`], [`Para pagar la póliza`, `To pay for the policy`], [`Compara pólizas`, `Compare policies`], [`Busca planes para estudiantes con cobertura completa en España.`, `Look for student plans with full coverage in Spain.`],
+    [`Revisa las condiciones`, `Check the conditions`], [`Sin copagos, sin carencias y con repatriación incluida.`, `No co-pays, no waiting periods and repatriation included.`], [`Contrátala`, `Buy it`],
+    [`Por la duración completa de tu estancia.`, `For the full length of your stay.`], [`Descarga el certificado`, `Download the certificate`], [`En español, y guárdalo en tu Binder virtual.`, `In Spanish, and save it in your virtual Binder.`],
+    [`Antes de viajar`, `Before you travel`], [`Residencias o portales verificados`, `Residences or verified websites`], [`Para qué`, `What for`], [`Empadronarte y pedir la TIE`, `Registering your address and getting your TIE`],
+    [`Ojo`, `Watch out`], [`Nunca pagues sin contrato`, `Never pay without a contract`], [`Te lo pedirán al firmar`, `They'll ask for it when you sign`], [`O tu matrícula`, `Or your enrolment`],
+    [`Contrato o reserva`, `Contract or booking`], [`Firmado por ambas partes`, `Signed by both parties`], [`Pago de la fianza`, `Deposit payment`], [`Siempre con recibo`, `Always with a receipt`],
+    [`Define presupuesto y zona`, `Set your budget and area`], [`Según dónde está tu campus.`, `Based on where your campus is.`], [`Busca opciones`, `Look for options`], [`En residencias o portales verificados.`, `In residences or verified websites.`],
+    [`Visita antes de pagar`, `Visit before paying`], [`En persona o por videollamada.`, `In person or by video call.`], [`Firma el contrato`, `Sign the contract`], [`Y confirma que podrás empadronarte.`, `And confirm you'll be able to register your address.`],
+    [`Paga la fianza`, `Pay the deposit`], [`Solo con el contrato firmado y pide recibo.`, `Only once the contract is signed, and ask for a receipt.`], [`Ver opciones de alojamiento`, `See housing options`],
+    [`Cuándo llegar`, `When to arrive`], [`5–10 días antes de clases`, `5–10 days before classes`], [`Aeropuerto`, `Airport`], [`En frontera`, `At the border`], [`Motivo, alojamiento y dinero`, `Purpose, housing and money`],
+    [`Al salir`, `On the way out`], [`Metro L8, Cercanías o bus Exprés`, `Metro L8, Cercanías or Express bus`], [`Tu carpeta de viaje`, `Your travel folder`], [`Toca lo que ya metiste en tu carpeta.`, `Tap what you've already put in your folder.`],
+    [`Pasaporte con visado`, `Passport with visa`], [`Revisa la fecha de validez`, `Check the validity date`], [`Billete de avión`, `Plane ticket`], [`Impreso o en el móvil`, `Printed or on your phone`],
+    [`Certificado en español`, `Certificate in Spanish`], [`Justificante de alojamiento`, `Proof of accommodation`], [`Contrato o reserva`, `Contract or booking`], [`Copias de todo`, `Copies of everything`], [`Impresas y digitales`, `Printed and digital`],
+    [`Compra tu vuelo`, `Buy your flight`], [`Para llegar entre 5 y 10 días antes de clases.`, `To arrive 5 to 10 days before classes.`], [`Prepara tu carpeta`, `Prepare your folder`], [`Con originales y copias.`, `With originals and copies.`],
+    [`Llévala contigo`, `Keep it with you`], [`Siempre en el equipaje de mano.`, `Always in your carry-on.`], [`Pasa el control`, `Go through passport control`], [`Con la documentación a mano.`, `With your documents at hand.`],
+    [`Llega a tu casa`, `Get to your place`], [`En Metro (L8), Cercanías o bus Exprés Aeropuerto.`, `By Metro (L8), Cercanías or the Airport Express bus.`], [`Ver cómo moverte`, `See how to get around`],
+    [`Comida`, `Food`], [`Ocio`, `Leisure`], [`Un plan mensual de tus gastos fijos y variables en Madrid.`, `A monthly plan of your fixed and variable expenses in Madrid.`], [`Tu mes típico`, `Your typical month`],
+    [`Unos 940 € al mes`, `About €940 a month`], [`Más un 10–15 % extra para imprevistos.`, `Plus 10–15% extra for the unexpected.`], [`Aparta para imprevistos`, `Save for the unexpected`], [`Un 10–15 % extra cada mes`, `10–15% extra each month`],
+    [`Ahorra para el primer mes`, `Save for the first month`], [`Fianza, compras para la casa y la SIM`, `Deposit, home shopping and your SIM`], [`Lleva algo de efectivo`, `Carry some cash`], [`Para mercados y sitios pequeños`, `For markets and small places`],
+    [`Tarjeta sin comisiones`, `Fee-free card`], [`Por cambio de divisa`, `For currency exchange`],
+    [`El día que llegas`, `The day you arrive`], [`Tu piso o residencia`, `Your flat or residence`], [`Con quién`, `With whom`], [`Propietario, agencia o recepción`, `Landlord, agency or reception`], [`Clave`, `Key point`],
+    [`Fotos con fecha de todo`, `Dated photos of everything`], [`Para identificarte`, `To identify yourself`], [`Contrato de alquiler`, `Rental contract`], [`Tu copia firmada`, `Your signed copy`], [`El justificante`, `The receipt`],
+    [`Inventario`, `Inventory`], [`Si te lo dan`, `If they give you one`], [`Confirma la entrega de llaves`, `Confirm the key handover`], [`Hora y lugar exactos.`, `Exact time and place.`],
+    [`Revisa y haz fotos`, `Check and take photos`], [`Fotos y vídeo con fecha de cada estancia.`, `Dated photos and video of every room.`], [`Firma el inventario`, `Sign the inventory`], [`Anota cualquier daño que veas.`, `Note any damage you see.`],
+    [`Recibe tus llaves`, `Get your keys`], [`Y comprueba que funcionan.`, `And check that they work.`], [`Envía las fotos`, `Send the photos`], [`Por correo al propietario ese mismo día.`, `By email to the landlord that same day.`],
+    [`El primer día`, `On day one`], [`Sol, Gran Vía o centros comerciales`, `Sol, Gran Vía or shopping centres`], [`Necesitas`, `You need`], [`Tu pasaporte`, `Your passport`], [`Horario`, `Hours`],
+    [`10:00–21:00, también sábados`, `10:00–21:00, Saturdays too`], [`Un número español (+34) en tarjeta física o eSIM.`, `A Spanish (+34) number on a physical SIM or eSIM.`], [`Prepago`, `Prepaid`],
+    [`Sin permanencia y con recargas mensuales.`, `No commitment, with monthly top-ups.`], [`Contrato`, `Contract`], [`Más datos; suele pedir cuenta española.`, `More data; usually needs a Spanish bank account.`],
+    [`Se activa desde el móvil, sin pasar por tienda.`, `Activated from your phone, no store visit needed.`], [`Móvil liberado`, `Unlocked phone`], [`Que acepte cualquier compañía`, `That works with any carrier`],
+    [`Lleva tu pasaporte`, `Bring your passport`], [`Para dar de alta la línea`, `To register the line`], [`Tarjeta o efectivo`, `Card or cash`], [`Para pagar en tienda`, `To pay in store`], [`Línea activa`, `Active line`],
+    [`Los códigos del banco llegan por SMS`, `Bank codes arrive by SMS`],
+    [`Precio`, `Price`], [`Abono Joven: 20 €/mes`, `Youth Pass: €20/month`], [`Para`, `For`], [`Menores de 26 años`, `Under-26s`], [`Web del Consorcio u oficinas`, `Consortium website or offices`], [`Vale en`, `Valid on`],
+    [`Metro, bus y Cercanías`, `Metro, bus and Cercanías`], [`Pasaporte o NIE`, `Passport or NIE`], [`Para la solicitud`, `For the application`], [`Foto reciente`, `Recent photo`], [`Tamaño carné`, `ID-photo size`],
+    [`Correo electrónico`, `Email address`], [`Para recibir avisos`, `To get notifications`], [`Tarjeta bancaria`, `Bank card`], [`Para pagar la emisión`, `To pay the issuing fee`], [`Solicita tu TTP`, `Apply for your TTP`],
+    [`En la web del Consorcio de Transportes.`, `On the Transport Consortium website.`], [`Sube tus datos`, `Upload your details`], [`Tu foto y tu documento de identidad.`, `Your photo and your ID document.`],
+    [`Paga la emisión`, `Pay the issuing fee`], [`Con tarjeta bancaria.`, `With a bank card.`], [`Recibe tu tarjeta`, `Get your card`], [`En la oficina elegida o en casa.`, `At the office you chose or at home.`],
+    [`Carga el Abono Joven`, `Load the Youth Pass`], [`En las máquinas del Metro o en la app.`, `At the Metro machines or in the app.`], [`Ver guía de transporte`, `See transport guide`],
+    [`Al llegar, antes de la TIE`, `When you arrive, before the TIE`], [`Oficina Línea Madrid`, `Línea Madrid office`], [`Cita`, `Appointment`], [`madrid.es o el 010`, `madrid.es or 010`], [`Gratis`, `Free`],
+    [`El original`, `The original`], [`Hoja de inscripción`, `Registration form`], [`Rellena y firmada`, `Filled in and signed`], [`Contrato o autorización`, `Contract or authorisation`],
+    [`A tu nombre, o firmada por el titular con copia de su DNI`, `In your name, or signed by the holder with a copy of their DNI`], [`En madrid.es o llamando al 010.`, `At madrid.es or by calling 010.`],
+    [`Rellena la hoja`, `Fill in the form`], [`La hoja de inscripción padronal.`, `The address registration form.`], [`Ve a la oficina`, `Go to the office`], [`Con tus documentos originales.`, `With your original documents.`],
+    [`Recibe tu volante`, `Get your certificate`], [`O el certificado si lo necesitas para la TIE.`, `Or the full certificate if you need it for the TIE.`],
+    [`En el Welcome Day`, `On Welcome Day`], [`ORI de tu campus`, `Your campus IRO`], [`Te llevas`, `You get`], [`Carné y correo de estudiante`, `Student card and email`], [`Pide`, `Ask for`], [`Tu arrival certificate`, `Your arrival certificate`],
+    [`De tu universidad`, `From your university`], [`Learning Agreement`, `Learning Agreement`], [`Firmado`, `Signed`], [`Foto tamaño carné`, `ID-size photo`], [`Para tu carné`, `For your card`], [`El certificado`, `The certificate`],
+    [`Revisa tu correo`, `Check your email`], [`Ahí te dicen la fecha del Welcome Day.`, `It tells you the Welcome Day date.`], [`Ve a la ORI`, `Go to the IRO`], [`La Oficina de Relaciones Internacionales de tu campus.`, `The International Relations Office on your campus.`],
+    [`Entrega tus documentos`, `Hand in your documents`], [`Y firma tu certificado de llegada.`, `And sign your arrival certificate.`], [`Completa tu matrícula`, `Complete your enrolment`], [`Y confirma tus asignaturas.`, `And confirm your courses.`],
+    [`Recoge tu carné`, `Pick up your card`], [`Y activa tu correo de estudiante.`, `And activate your student email.`],
+    [`L–S 9:00–21:30`, `Mon–Sat 9:00–21:30`], [`Domingos`, `Sundays`], [`Muchos cierran`, `Many are closed`], [`Pago`, `Payment`], [`Tarjeta, móvil o efectivo`, `Card, phone or cash`], [`Bolsas`, `Bags`],
+    [`Se cobran: lleva la tuya`, `You pay for them: bring your own`], [`Tus tiendas de referencia para la compra diaria.`, `Your go-to stores for everyday shopping.`], [`Mercadona`, `Mercadona`],
+    [`Buena relación calidad-precio.`, `Good value for money.`], [`Lidl y Dia`, `Lidl and Dia`], [`Opciones económicas.`, `Budget options.`], [`Abiertos hasta tarde en el centro.`, `Open late in the centre.`],
+    [`Mercados municipales`, `Municipal markets`], [`Fruta, verdura y producto fresco.`, `Fruit, vegetables and fresh produce.`], [`Ubica tu súper`, `Find your supermarket`], [`El más cercano a casa`, `The closest to home`],
+    [`Compara precios`, `Compare prices`], [`Durante la primera semana`, `During your first week`], [`Descarga su app`, `Download its app`], [`Con ofertas y compra online`, `With deals and online shopping`],
+    [`Bolsa reutilizable`, `Reusable bag`], [`Para no pagar bolsas`, `So you don't pay for bags`],
+    [`Emergencias`, `Emergencies`], [`Llama al 112`, `Call 112`], [`9:30–21:00 aprox.`, `About 9:30–21:00`], [`De guardia`, `On duty`], [`24 h por turnos`, `24 h on a rota`], [`Lleva`, `Carry`],
+    [`Tarjeta del seguro y pasaporte`, `Insurance card and passport`], [`Dónde acudir si te enfermas.`, `Where to go if you get sick.`], [`Farmacia de barrio`, `Local pharmacy`], [`Cruz verde: medicinas y consejo.`, `Green cross: medicines and advice.`],
+    [`Farmacia de guardia`, `On-duty pharmacy`], [`Abierta 24 h por turnos.`, `Open 24 h on a rota.`], [`Urgencias`, `Emergency room`], [`Hospital o centro concertado con tu seguro.`, `Hospital or centre covered by your insurance.`],
+    [`Ubica tu farmacia`, `Find your pharmacy`], [`La más cercana a casa`, `The closest to home`], [`Teléfono del seguro`, `Insurance phone number`], [`Guarda su línea 24 h`, `Save its 24 h line`],
+    [`Guarda el 112`, `Save 112`], [`Para emergencias`, `For emergencies`], [`Tarjeta del seguro`, `Insurance card`], [`Siempre en la cartera`, `Always in your wallet`],
+    [`Cena`, `Dinner`], [`Desde las 21:00`, `From 21:00`], [`Metro`, `Metro`], [`Cierra sobre la 1:30`, `Closes around 1:30`], [`Estudiantes`, `Students`], [`Descuentos en museos`, `Museum discounts`],
+    [`Barrios y planes para disfrutar Madrid.`, `Neighbourhoods and plans to enjoy Madrid.`], [`Barrios para conocer`, `Neighbourhoods to explore`], [`Bares, cafés y ambiente joven.`, `Bars, cafés and a young vibe.`],
+    [`Tapas los domingos por la Cava Baja.`, `Sunday tapas along Cava Baja.`], [`Parque, barcas y Palacio de Cristal.`, `Park, rowing boats and the Crystal Palace.`], [`Zona universitaria y Templo de Debod.`, `University area and the Temple of Debod.`],
+    [`Tu lista de planes`, `Your plans list`], [`Toca los planes que ya hiciste.`, `Tap the plans you've already done.`], [`Tapas en La Latina`, `Tapas in La Latina`], [`Un domingo por la Cava Baja`, `A Sunday along Cava Baja`],
+    [`Barca en el Retiro`, `Rowing boat in the Retiro`], [`En el Estanque Grande`, `On the Great Pond`], [`Llega con 30 min de margen`, `Arrive 30 min early`], [`Un museo gratis`, `A free museum`], [`Con tu carnet de estudiante`, `With your student card`],
+    [`Necesitas`, `You need`], [`Cuenta con IBAN español`, `Account with a Spanish IBAN`], [`Opciones`, `Options`], [`Bancos o neobancos`, `Banks or neobanks`], [`Revisa`, `Check`], [`Comisiones`, `Fees`],
+    [`Alquiler y día a día`, `Rent and everyday spending`], [`Para abrir la cuenta`, `To open the account`], [`NIE o TIE`, `NIE or TIE`], [`Algunos bancos lo piden`, `Some banks ask for it`],
+    [`Empadronamiento`, `Address registration`], [`Carta de la universidad`, `University letter`], [`Para cuentas de estudiante`, `For student accounts`], [`Compara bancos`, `Compare banks`],
+    [`Comisiones y cuentas para estudiantes.`, `Fees and student accounts.`], [`Solicita tu cuenta`, `Apply for your account`], [`Online o con cita en una oficina.`, `Online or with an appointment at a branch.`],
+    [`Verifica tu identidad`, `Verify your identity`], [`Con tu documentación.`, `With your documents.`], [`Recibe IBAN y tarjeta`, `Get your IBAN and card`], [`Ya puedes pagar el alquiler.`, `Now you can pay the rent.`],
+    [`Activa alertas`, `Turn on alerts`], [`Y revisa tu presupuesto cada semana.`, `And check your budget every week.`], [`Campus`, `Campus`],
+    /* Transporte, Alojamiento y nuevas funciones */
+    [`Muévete por Madrid`, `Get around Madrid`], [`Las apps y tarjetas que vas a usar todos los días, explicadas en corto.`, `The apps and cards you'll use every day, explained in short.`],
+    [`Tarjeta`, `Public`], [`Transporte Público`, `Transport Card`], [`Abono Joven · hasta 26 años`, `Youth Pass · up to age 26`], [`Lo primero que necesitas`, `The first thing you need`],
+    [`Tarjeta Transporte Público (TTP)`, `Public Transport Card (TTP)`], [`Es tu tarjeta personal para metro, autobús y Cercanías. Le cargas el`, `Your personal card for the metro, buses and Cercanías trains. Load the`],
+    [`Abono Joven`, `Youth Pass`], [`(si tienes menos de 26 años) y viajas todo lo que quieras por`, `(if you're under 26) and travel as much as you want for`], [`20 € al mes`, `€20 a month`],
+    [`en toda la Comunidad de Madrid.`, `across the whole Madrid region.`], [`Más info (CRTM)`, `More info (CRTM)`], [`Recarga desde tu móvil`, `Top up from your phone`],
+    [`App Tarjeta Transporte (CRTM)`, `Tarjeta Transporte app (CRTM)`], [`La app oficial del Consorcio para`, `The Consortium's official app to`], [`recargar cualquier Tarjeta Transporte Público`, `top up any Public Transport Card`],
+    [`: acercas la tarjeta a tu móvil (necesita NFC), eliges tu abono y pagas. También ves cuántos viajes o días te quedan.`, `: hold the card to your phone (NFC needed), choose your pass and pay. You can also see how many trips or days you have left.`],
+    [`Descargar la app`, `Download the app`], [`Lo más rápido por el centro`, `The fastest way around the centre`], [`Metro de Madrid`, `Madrid Metro`],
+    [`12 líneas y un ramal, abierto de 6:00 a 1:30 aprox. En su app ves el plano, los horarios y avisos de cada línea.`, `12 lines and a branch, open roughly 6:00 to 1:30. Its app shows the map, timetables and alerts for every line.`],
+    [`Ver web y app`, `See website and app`], [`Llegan a todas partes`, `They go everywhere`], [`Autobuses`, `Buses`],
+    [`En Madrid el color del autobús te dice a dónde va. Con tu abono los usas todos.`, `In Madrid the bus colour tells you where it goes. Your pass covers them all.`],
+    [`Azules · EMT`, `Blue · EMT`], [`Dentro de la ciudad de Madrid. Los que más usarás.`, `Inside the city of Madrid. The ones you'll use most.`], [`Verdes`, `Green`],
+    [`A otras ciudades como Pozuelo o Alcalá. Salen de intercambiadores como Moncloa.`, `To other towns like Pozuelo or Alcalá. They leave from hubs like Moncloa.`], [`Búhos`, `Night buses`],
+    [`De madrugada, cuando el metro ya cerró. Casi todos salen de Cibeles.`, `Late at night, once the metro has closed. Most leave from Cibeles.`], [`App EMT`, `EMT app`],
+    [`Afueras y aeropuerto`, `Suburbs and airport`], [`Trenes a las afueras, al aeropuerto (T4) y a escapadas como El Escorial o Aranjuez. Con tu abono puedes usarlos según tu zona.`, `Trains to the suburbs, the airport (T4) and day trips like El Escorial or Aranjuez. Your pass covers them depending on your zone.`],
+    [`Para no perderte`, `So you never get lost`], [`Te dice qué metro o autobús tomar, dónde bajarte y a qué hora pasa, en tiempo real.`, `Tells you which metro or bus to take, where to get off and when it comes, in real time.`],
+    [`Abrir rutas`, `Open directions`], [`¿No tienes tarjeta?`, `No card yet?`],
+    [`Pide cita en la web del Consorcio (CRTM) con tu pasaporte y una foto, y recógela en una oficina de gestión, por ejemplo en intercambiadores grandes como Moncloa. Cuesta unos 4 €.`, `Book an appointment on the Consortium (CRTM) website with your passport and a photo, and pick it up at a service office, for example in big hubs like Moncloa. It costs about €4.`],
+    [`¿Dónde la consigo?`, `Where do I get it?`],
+    [`Estas apps y servicios pertenecen a organismos públicos (Consorcio Regional de Transportes de Madrid, Metro de Madrid, EMT y Renfe) y a Google. NEXA no está afiliado a ellos; solo te dirige a sus webs oficiales. Precios y horarios pueden cambiar: confírmalos siempre en la fuente oficial.`, `These apps and services belong to public bodies (Madrid Regional Transport Consortium, Madrid Metro, EMT and Renfe) and to Google. NEXA isn't affiliated with them; it just points you to their official websites. Prices and timetables may change: always confirm with the official source.`],
+    [`Logo de Metro de Madrid`, `Madrid Metro logo`], [`Logo de Cercanías Renfe`, `Renfe Cercanías logo`], [`Logo de Google Maps`, `Google Maps logo`],
+    [`Alojamiento`, `Housing`], [`¿Aún buscando dónde vivir?`, `Still looking for a place to live?`], [`Elige tu zona y compara las tres opciones más comunes para estudiantes.`, `Pick your area and compare the three most common options for students.`],
+    [`Ubicación`, `Location`], [`Lo tienes todo a pie, pero es la zona más cara.`, `Everything is within walking distance, but it's the most expensive area.`],
+    [`Tranquilo y cerca de campus como ESIC. Te mueves en bus interurbano o Metro Ligero.`, `Quiet and close to campuses like ESIC. You get around by intercity bus or Metro Ligero.`],
+    [`La zona universitaria por excelencia, con muchos colegios mayores.`, `The university area par excellence, with lots of halls of residence.`], [`Más barato y conectado por Cercanías y Metrosur.`, `Cheaper and connected by Cercanías and Metrosur.`],
+    [`Ciudad universitaria con mucho ambiente, a unos 40 min en Cercanías.`, `A lively university town, about 40 min away by Cercanías.`], [`Útil si estudias o trabajas por el aeropuerto o IFEMA; queda lejos del centro.`, `Handy if you study or work near the airport or IFEMA; it's far from the centre.`],
+    [`Lo más fácil al llegar`, `The easiest when you arrive`], [`Residencia de estudiantes`, `Student residence`],
+    [`Habitación individual o doble en un edificio solo para estudiantes. Muchas incluyen limpieza, wifi y a veces comidas.`, `A single or double room in a students-only building. Many include cleaning, wifi and sometimes meals.`],
+    [`Desde`, `From`], [`/mes`, `/month`], [`Ver opciones`, `See options`], [`Lo mejor de los dos mundos`, `The best of both worlds`], [`Coliving`, `Coliving`],
+    [`Tu habitación privada y zonas comunes compartidas (cocina, salón, coworking) con gente joven de todo el mundo.`, `Your own private room plus shared spaces (kitchen, lounge, coworking) with young people from all over the world.`],
+    [`La opción más económica`, `The cheapest option`], [`Habitación en piso compartido`, `Room in a shared flat`],
+    [`Alquilas una habitación en un piso con otras personas y compartes cocina y baño. Es lo que hace la mayoría de estudiantes.`, `You rent a room in a flat with other people and share the kitchen and bathroom. It's what most students do.`],
+    [`Comunidad NEXA`, `NEXA community`], [`¿Buscas con quién compartir?`, `Looking for someone to share with?`],
+    [`Otros estudiantes publican sus fechas, zona y presupuesto para encontrar roomie. Mira quién busca lo mismo que tú o publica tu búsqueda.`, `Other students post their dates, area and budget to find a roommate. See who's looking for the same as you or post your own search.`],
+    [`Ver «Busco roomie»`, `See “Looking for a roomie”`], [`Estudiantes compartiendo piso`, `Students sharing a flat`],
+    [`Precios aproximados por mes, solo como referencia. Los enlaces llevan a buscadores externos (Google Maps, Spotahome, Idealista, HousingAnywhere); NEXA no está afiliado a ellos. Nunca pagues una fianza sin contrato firmado ni sin ver el lugar.`, `Approximate monthly prices, for reference only. Links go to external search sites (Google Maps, Spotahome, Idealista, HousingAnywhere); NEXA isn't affiliated with them. Never pay a deposit without a signed contract or without seeing the place.`],
+    [`Todas las opciones`, `All options`], [`Todo incluido`, `All-inclusive`], [`Fácil hacer amigxs`, `Easy to make friends`], [`Contrato por curso`, `Contract per academic year`],
+    [`Suele ser la opción más cara`, `Usually the most expensive option`], [`Ejemplo`, `Example`], [`Habitación doble en residencia`, `Double room in a residence`],
+    [`Limpieza semanal`, `Weekly cleaning`], [`Wifi`, `Wifi`], [`Sala de estudio`, `Study room`], [`Buscar similares`, `Find similar`], [`Habitación individual con baño`, `Single room with bathroom`],
+    [`Baño privado`, `Private bathroom`], [`Gimnasio`, `Gym`], [`Lavandería`, `Laundry`], [`Colegio mayor · pensión completa`, `Hall of residence · full board`], [`Todas las comidas`, `All meals`],
+    [`Actividades`, `Activities`], [`Limpieza diaria`, `Daily cleaning`], [`Ver disponibilidad real en:`, `See real availability on:`], [`Buscar en Google Maps`, `Search on Google Maps`],
+    [`Contratos flexibles`, `Flexible contracts`], [`Ambiente internacional`, `International vibe`], [`Amueblado`, `Furnished`], [`Plazas limitadas: reserva con tiempo`, `Limited spots: book early`],
+    [`Habitación estándar en coliving`, `Standard coliving room`], [`Cocina compartida`, `Shared kitchen`], [`Eventos semanales`, `Weekly events`], [`Habitación con baño privado`, `Room with private bathroom`],
+    [`Limpieza incluida`, `Cleaning included`], [`Estudio en coliving`, `Coliving studio`], [`Cocina propia`, `Own kitchen`], [`Terraza común`, `Shared terrace`],
+    [`Más barato`, `Cheaper`], [`Más independencia`, `More independence`], [`Muchas opciones`, `Lots of options`], [`Ojo con estafas: nunca pagues sin contrato`, `Watch out for scams: never pay without a contract`],
+    [`Habitación en piso de 4`, `Room in a 4-person flat`], [`Gastos aparte`, `Bills not included`], [`3 compañerxs`, `3 flatmates`], [`Contrato por meses`, `Monthly contract`],
+    [`Habitación exterior en piso de 3`, `Bright room in a 3-person flat`], [`Gastos incluidos`, `Bills included`], [`Mucha luz`, `Lots of light`], [`Amueblada`, `Furnished`],
+    [`Habitación con baño propio`, `Room with en-suite bathroom`], [`Cama doble`, `Double bed`],
+    [`Comunidad`, `Community`], [`Mi perfil`, `My profile`], [`Cambiar portada`, `Change cover`], [`Portada`, `Cover`], [`Comparte recomendaciones, encuentra roomie y aprende de quienes ya vivieron Madrid.`, `Share recommendations, find a roommate and learn from people who already lived in Madrid.`],
+    [`Tu tarjeta, el metro, los buses y las apps que usarás cada día, explicados en corto.`, `Your card, the metro, buses and the apps you'll use every day, explained in short.`],
     [`MY SETUP - Tu llegada, paso a paso.`, `MY SETUP - Your arrival, step by step.`], [`Ask IA`, `Ask AI`], [`Ask NEXA`, `Ask NEXA`],[`Asistente de trámites en Madrid · respuestas orientativas`, `Madrid paperwork assistant · guidance only`],
     [`¿Cómo pido la TIE?`, `How do I get my TIE?`], [`¿Dónde me empadrono?`, `Where do I register my address?`], [`¿Qué seguro necesito?`, `What insurance do I need?`],
     [`Abono de transporte`, `Transport pass`], [`Abrir cuenta bancaria`, `Open a bank account`], [`Escribe tu pregunta`, `Type your question`],
@@ -4696,6 +4890,20 @@
   const plural = (n, one, many) => (+n === 1 ? one : many);
   // Textos con números o nombres dentro: se traducen con patrones
   const EN_PATTERNS = [
+    [/^hace (\d+) días?$/, m => `${m[1]} ${plural(m[1], 'day', 'days')} ago`],
+    [/^hoy$/, () => 'today'],
+    [/^(\d+) comentarios?$/, m => `${m[1]} ${plural(m[1], 'comment', 'comments')}`],
+    [/^(\d+) de (\d+) (listos|hechos)$/, m => `${m[1]} of ${m[2]} ${m[3] === 'listos' ? 'ready' : 'done'}`],
+    [/^Paso (\d+)$/, m => `Step ${m[1]}`],
+    [/^Etapa (\d+)$/, m => `Stage ${m[1]}`],
+    [/^(\d+)% completado$/, m => `${m[1]}% complete`],
+    [/^([\d.]+) €\/mes$/, m => `€${m[1]}/month`],
+    [/^Habla (.+)$/, m => `Speaks ${m[1].replace(/Español/g, 'Spanish').replace(/Inglés/g, 'English').replace(/Francés/g, 'French').replace(/ y /g, ' and ')}`],
+    // Fechas cortas: "1 sep 2026 – 20 dic 2026" o "Sep 2026 – Ene 2027"
+    [/^(?:\d{1,2} )?(?:ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)\w* \d{4}(?: – (?:\d{1,2} )?(?:ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)\w* \d{4})?$/i,
+      m => m[0].replace(/\b(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)/gi, mo => ({ ene: 'Jan', feb: 'Feb', mar: 'Mar', abr: 'Apr', may: 'May', jun: 'Jun',
+        jul: 'Jul', ago: 'Aug', sep: 'Sep', oct: 'Oct', nov: 'Nov', dic: 'Dec' })[mo.toLowerCase()])],
+    [/^(.+) · metro a (\d+) min$/, m => `${m[1]} · ${m[2]} min to the metro`],
     [/^(\d+) de (\d+) tareas$/, m => `${m[1]} of ${m[2]} tasks`],
     [/^(\d+) de (\d+)$/, m => `${m[1]} of ${m[2]}`],
     [/^(\d+)\. (.+) \((\d+) tareas?\)$/, m => `${m[1]}. ${tr(m[2])} (${m[3]} ${plural(m[3], 'task', 'tasks')})`],
@@ -4783,6 +4991,8 @@
       });
       let n;
       while ((n = w.nextNode())) n.nodeType === 3 ? this.text(n) : this.element(n);
+      // Los textarea no se recorren (su contenido es del usuario), pero su placeholder sí se traduce
+      if (root.querySelectorAll) root.querySelectorAll('textarea').forEach(t => this.element(t));
     },
     apply(lang) {
       this.lang = lang;
@@ -4831,4 +5041,5 @@
 </script>
 </body>
 </html>
+
 
