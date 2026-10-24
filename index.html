@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXA · Madrid City Pack</title>
+  <title>NEXA</title>
   <meta name="description" content="NEXA: la plataforma para estudiantes internacionales en Madrid. Trámites, mapa, comunidad y soporte en un solo lugar." />
 
   <!-- Tailwind CSS (Play CDN) -->
@@ -38,8 +38,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Leaflet (mapa) + Lucide (iconos) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 
   <style>
@@ -99,7 +97,12 @@
     .task.done .task-title { text-decoration: line-through; text-decoration-thickness: 2px; color: #6B6B6B; }
     .chev { transition: transform .25s ease; }
     .task[data-open="true"] .chev { transform: rotate(180deg); }
-    #ring-progress { transition: stroke-dashoffset .8s ease; }
+    /* Color por etapa: Pre-viaje azul · Llegada naranja · Ya estoy instalado verde */
+    .tone-pre { --c: #0072B2; --soft: #E3F1FA; --dark: #005A8C; }
+    .tone-arr { --c: #C2410C; --soft: #FFE9DC; --dark: #9A3412; }
+    .tone-set { --c: #047857; --soft: #DCF3E9; --dark: #065F46; }
+    .t-bg { background: var(--c); } .t-soft { background: var(--soft); } .t-text { color: var(--dark); }
+    .t-border { border-color: var(--c) !important; }    #ring-progress { transition: stroke-dashoffset .8s ease; }
 
     /* ---------- CHAT ---------- */
     .typing span { display:inline-block; width:6px; height:6px; margin:0 2px; border-radius:50%; background:#9a9a9a; animation: blink 1.2s infinite; }
@@ -522,7 +525,7 @@
       </div>
     </div>
     <div class="border-t border-white/10">
-      <p class="max-w-7xl mx-auto px-4 py-6 text-xs text-white/50">© <span id="year"></span> NEXA · Madrid City Pack. Información orientativa: confirma siempre con las fuentes oficiales.</p>
+      <p class="max-w-7xl mx-auto px-4 py-6 text-xs text-white/50">© <span id="year"></span> NEXA. Información orientativa: confirma siempre con las fuentes oficiales.</p>
     </div>
   </footer>
 </div>
@@ -571,6 +574,7 @@
         </div>
         <button class="open-terms flex items-center gap-3.5 px-3 py-3 rounded-2xl hover:bg-black/5 font-semibold text-left"><i data-lucide="file-text" class="text-nexa-ink/60"></i> <span data-i18n="drawer.terms">Términos y condiciones</span></button>
         <button class="open-terms flex items-center gap-3.5 px-3 py-3 rounded-2xl hover:bg-black/5 font-semibold text-left"><i data-lucide="shield-check" class="text-nexa-ink/60"></i> <span data-i18n="drawer.privacy">Política de privacidad</span></button>
+        <button class="open-cookies flex items-center gap-3.5 px-3 py-3 rounded-2xl hover:bg-black/5 font-semibold text-left"><i data-lucide="cookie" class="text-nexa-ink/60"></i> Configuración de cookies</button>
       </div>
     </div>
   </div>
@@ -750,24 +754,25 @@
       <span class="text-3xl font-extrabold tracking-tight text-nexa-brand">NEXA.</span>
       <button class="close-drawer p-2 rounded-full text-nexa-ink hover:bg-black/5" aria-label="Cerrar menú"><i data-lucide="x" class="!w-7 !h-7"></i></button>
     </div>
-    <div class="mt-5 flex items-center gap-3.5">
-      <span id="appDrawerAvatar" class="w-14 h-14 rounded-full bg-nexa-orangeSoft text-nexa-orangeDark text-lg font-extrabold flex items-center justify-center ring-2 ring-nexa-orange ring-offset-2 ring-offset-nexa-cream shrink-0"></span>
-      <div class="min-w-0">
-        <p id="appDrawerName" class="font-extrabold truncate"></p>
-        <p id="appDrawerMeta" class="text-sm text-nexa-ink/60 truncate"></p>
-      </div>
-    </div>
+    <button class="go-profile mt-5 -mx-2 w-[calc(100%+1rem)] flex items-center gap-3.5 rounded-2xl p-2 text-left hover:bg-black/5 transition" aria-label="Ver mi perfil">
+      <span id="appDrawerAvatar" class="w-14 h-14 rounded-full bg-nexa-orangeSoft text-nexa-orangeDark text-lg font-extrabold flex items-center justify-center ring-2 ring-nexa-orange ring-offset-2 ring-offset-nexa-cream shrink-0 overflow-hidden"></span>
+      <span class="min-w-0 flex-1">
+        <span id="appDrawerName" class="block font-extrabold truncate"></span>
+        <span id="appDrawerMeta" class="block text-sm text-nexa-ink/60 truncate"></span>
+        <span class="mt-0.5 inline-flex items-center gap-1 text-xs font-bold text-nexa-orange">Ver mi perfil <i data-lucide="chevron-right" class="!w-3.5 !h-3.5"></i></span>
+      </span>
+    </button>
   </div>
 
   <!-- Navegación -->
   <div class="flex-1 overflow-y-auto px-4 py-4">
     <nav class="grid gap-1" aria-label="Panel">
-      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="home"><i data-lucide="house" class="!w-6 !h-6 text-nexa-orange"></i> Inicio</button>
+      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="home"><i data-lucide="messages-square" class="!w-6 !h-6 text-nexa-orange"></i> Inicio</button>
       <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="setup"><i data-lucide="circle-check" class="!w-6 !h-6 text-nexa-orange"></i> My Setup</button>
-      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="ask"><i data-lucide="bot" class="!w-6 !h-6 text-nexa-orange"></i> Ask (IA)</button>
-      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="forum"><i data-lucide="messages-square" class="!w-6 !h-6 text-nexa-orange"></i> Been There</button>
-      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="map"><i data-lucide="map" class="!w-6 !h-6 text-nexa-orange"></i> Student Map</button>
       <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="transporte"><i data-lucide="tram-front" class="!w-6 !h-6 text-nexa-orange"></i> Transporte</button>
+      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="alojamiento"><i data-lucide="house" class="!w-6 !h-6 text-nexa-orange"></i> Alojamiento</button>
+      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="map"><i data-lucide="map" class="!w-6 !h-6 text-nexa-orange"></i> Student Map</button>
+      <button class="ad-item flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl hover:bg-nexa-mist font-bold" data-go="ask"><i data-lucide="bot" class="!w-6 !h-6 text-nexa-orange"></i> Ask IA</button>
       <button class="open-sos flex items-center gap-4 w-full text-left px-4 py-3.5 rounded-2xl bg-red-50 hover:bg-red-100 font-extrabold text-nexa-sos"><i data-lucide="shield-alert" class="!w-6 !h-6"></i> SOS</button>
     </nav>
     <div class="my-3 mx-1 border-t border-black/10"></div>
@@ -779,6 +784,7 @@
         <button class="lang-btn lang-seg px-3.5 py-1.5 rounded-lg text-sm font-bold" data-lang="en">EN</button>
       </div>
     </div>
+    <button class="open-cookies mt-2 w-full flex items-center gap-4 text-left px-4 py-3.5 rounded-2xl bg-nexa-mist hover:bg-nexa-beige font-semibold transition"><i data-lucide="cookie" class="!w-6 !h-6 text-nexa-orange"></i> Configuración de cookies</button>
   </div>
 
   <!-- Cerrar sesión -->
@@ -790,7 +796,7 @@
 <!-- =====================================================================
      5–6. DASHBOARD PRIVADO
 ====================================================================== -->
-<div id="appShell" class="hidden min-h-screen bg-nexa-mist">
+<div id="appShell" class="hidden min-h-screen bg-[#FBF7F1]">
   <div id="previewBar" class="hidden bg-nexa-ink text-white">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-sm">
       <span class="flex items-center gap-2"><i data-lucide="eye"></i> Vista previa: así ve NEXA tu estudiante (cuenta demo de Ana Fer)</span>
@@ -812,10 +818,10 @@
         <div id="appNav" class="relative flex items-center gap-1 bg-nexa-beige/70 rounded-full p-1.5 w-max mx-auto whitespace-nowrap">
           <!-- Cápsula oscura que se desliza a la pestaña activa -->
           <span id="appNavIndicator" class="absolute top-1.5 bottom-1.5 left-0 w-0 rounded-full bg-nexa-ink shadow-md transition-all duration-500 ease-[cubic-bezier(.65,0,.35,1)]" aria-hidden="true"></span>
+          <button class="app-tab relative z-10 px-4 xl:px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300" data-view="home">Inicio</button>
           <button class="app-tab relative z-10 px-4 xl:px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300" data-view="setup">My Setup</button>
-          <button class="app-tab relative z-10 px-4 xl:px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300" data-view="ask">Ask</button>
-          <button class="app-tab relative z-10 px-4 xl:px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300" data-view="forum">Been There</button>
           <button class="app-tab relative z-10 px-4 xl:px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300" data-view="map">Student Map</button>
+          <button class="app-tab relative z-10 px-4 xl:px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300" data-view="ask">Ask IA</button>
           <button class="open-sos relative z-10 px-4 xl:px-5 py-2 rounded-full text-[15px] font-black tracking-wide text-nexa-sos flex items-center gap-1.5 hover:bg-red-50"><i data-lucide="triangle-alert" class="!w-[18px] !h-[18px]"></i> SOS</button>
         </div>
       </nav>
@@ -828,9 +834,9 @@
           </button>
           <div id="notifPanel" class="hidden absolute right-0 mt-2 w-[min(20rem,calc(100vw-2rem))] bg-white rounded-2xl shadow-2xl border border-black/5 p-2 z-50"></div>
         </div>
-        <span class="w-11 h-11 rounded-2xl bg-nexa-orange text-white flex items-center justify-center shrink-0"><i data-lucide="user" class="!w-6 !h-6"></i></span>
+        <button id="headAvatar" class="go-profile w-11 h-11 rounded-2xl bg-nexa-orange text-white flex items-center justify-center shrink-0 overflow-hidden hover:ring-2 hover:ring-nexa-orange hover:ring-offset-2 transition" aria-label="Ver mi perfil"><i data-lucide="user" class="!w-6 !h-6"></i></button>
         <div class="leading-tight">
-          <p id="userName" class="hidden sm:block text-sm font-extrabold max-w-[9rem] truncate"></p>
+          <button id="userName" class="go-profile hidden sm:block text-sm font-extrabold max-w-[9rem] truncate hover:text-nexa-orange text-left"></button>
           <button id="logoutBtn" class="mt-0.5 text-xs font-semibold text-nexa-ink/60 hover:text-nexa-ink inline-flex items-center gap-1"><i data-lucide="log-out" class="text-nexa-blue"></i> salir</button>
         </div>
       </div>
@@ -838,13 +844,290 @@
   </header>
 
   <main class="max-w-7xl mx-auto px-4 py-8">
+    <!-- ===== INICIO ===== -->
+    <section id="view-home" class="app-view hidden">
+      <div class="grid lg:grid-cols-[340px_minmax(0,1fr)] gap-6 items-start">
+        <!-- Perfil -->
+        <div class="space-y-5">
+          <div>
+            <span class="inline-flex items-center gap-2 bg-nexa-orangeSoft text-nexa-orangeDark text-xs font-extrabold tracking-wide uppercase px-3.5 py-1.5 rounded-full"><i data-lucide="messages-square"></i> Inicio</span>
+            <h1 class="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight">Hola, <span id="homeNick">estudiante</span> 👋</h1>
+            <p class="mt-1 text-nexa-ink/65">Bienvenidx a NEXA, tu comunidad en Madrid.</p>
+          </div>
+          <aside class="bg-white rounded-3xl border border-black/5 overflow-hidden">
+            <!-- Portada + foto -->
+            <div class="relative h-24 bg-gradient-to-br from-nexa-orange via-[#D9622B] to-[#CC79A7]">
+              <i data-lucide="plane" class="absolute right-4 top-3 !w-14 !h-14 text-white/15 -rotate-12" aria-hidden="true"></i>
+              <button id="profileEdit" class="absolute right-3 bottom-3 bg-white/95 hover:bg-white text-nexa-ink text-xs font-bold rounded-full px-3 py-1.5 inline-flex items-center gap-1.5 shadow"><i data-lucide="pencil" class="!w-3.5 !h-3.5"></i> Editar perfil</button>
+            </div>
+            <div class="px-6 pb-6">
+              <div class="-mt-10 flex items-end justify-between gap-3">
+                <label class="relative group cursor-pointer" title="Cambiar foto">
+                  <span id="homeAvatar" class="w-20 h-20 rounded-full bg-nexa-orange text-white text-2xl font-extrabold flex items-center justify-center ring-4 ring-white overflow-hidden">AF</span>
+                  <span class="absolute -right-0.5 bottom-0.5 w-7 h-7 rounded-full bg-nexa-ink text-white flex items-center justify-center ring-2 ring-white group-hover:scale-110 transition"><i data-lucide="camera" class="!w-3.5 !h-3.5"></i></span>
+                  <input id="photoInput" type="file" accept="image/*" class="sr-only" aria-label="Cambiar foto de perfil">
+                </label>
+              </div>
+              <button id="homeName" class="go-profile mt-3 block text-left text-xl font-extrabold leading-tight hover:text-nexa-orange transition"></button>
+              <div class="mt-1.5 flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wide bg-nexa-mist text-nexa-ink/75 px-2.5 py-1 rounded-full"><i data-lucide="graduation-cap" class="!w-3.5 !h-3.5"></i> Estudiante</span>
+                <span id="homeMeta" class="text-sm text-nexa-ink/65"></span>
+              </div>
+
+              <!-- Números -->
+              <div id="homeStats" class="mt-5 grid grid-cols-3 text-center rounded-2xl bg-nexa-cream border border-black/5 py-3"></div>
+
+              <button id="homeStage" class="mt-4 w-full text-left rounded-2xl px-4 py-3 t-soft"></button>
+
+              <div class="mt-5">
+                <p class="text-xs font-extrabold uppercase tracking-wider">Bio</p>
+                <p id="bioText" class="mt-2 text-sm text-nexa-ink/80 leading-relaxed whitespace-pre-line"></p>
+              </div>
+
+              <div class="mt-5">
+                <p class="text-xs font-extrabold uppercase tracking-wider">Sobre mí</p>
+                <ul id="homeAbout" class="mt-2.5 space-y-2 text-sm"></ul>
+              </div>
+
+              <div class="mt-5">
+                <p class="text-xs font-extrabold uppercase tracking-wider">Mis gustos</p>
+                <div id="homeLikes" class="mt-2.5 flex flex-wrap gap-2"></div>
+              </div>
+
+              <div id="homeSocial" class="mt-5 flex flex-wrap gap-2 empty:hidden"></div>
+              <button class="go-profile mt-5 w-full rounded-full border-2 border-black/10 hover:border-nexa-ink py-2.5 text-sm font-bold inline-flex items-center justify-center gap-2 transition"><i data-lucide="user" class="!w-4 !h-4"></i> Ver mi perfil completo</button>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Muro de la comunidad -->
+        <div class="min-w-0 space-y-5">
+          <div class="bg-white rounded-3xl border border-black/5 p-4 sm:p-5 space-y-4">
+            <div id="feedFilters" class="flex gap-2 overflow-x-auto no-scrollbar" role="tablist" aria-label="Filtrar publicaciones"></div>
+            <button id="feedCompose" class="w-full flex items-center gap-3 rounded-2xl bg-nexa-mist hover:bg-nexa-beige px-4 py-3 text-left transition">
+              <span id="feedAvatar" class="w-9 h-9 rounded-full bg-nexa-orange text-white text-sm font-extrabold flex items-center justify-center shrink-0">AF</span>
+              <span class="flex-1 text-nexa-ink/55 font-semibold">Comparte algo con la comunidad...</span>
+              <span class="w-9 h-9 rounded-full bg-nexa-orange text-white flex items-center justify-center shrink-0"><i data-lucide="plus"></i></span>
+            </button>
+          </div>
+          <div id="feedList" class="space-y-5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MI PERFIL ===== -->
+    <section id="view-profile" class="app-view hidden">
+      <button class="pp-back text-sm font-bold rounded-full px-4 py-2.5 bg-white border border-black/10 hover:border-nexa-ink inline-flex items-center gap-1.5"><i data-lucide="arrow-left"></i> Volver a Inicio</button>
+      <!-- Portada -->
+      <div class="mt-5 bg-white rounded-3xl border border-black/5 overflow-hidden">
+        <div class="relative h-36 sm:h-52 bg-gradient-to-br from-nexa-orange via-[#D9622B] to-[#CC79A7]">
+          <i data-lucide="plane" class="absolute right-8 top-6 !w-24 !h-24 sm:!w-32 sm:!h-32 text-white/15 -rotate-12" aria-hidden="true"></i>
+        </div>
+        <div class="px-6 sm:px-10 pb-7">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 -mt-14 sm:-mt-16">
+            <label class="relative group cursor-pointer self-start" title="Cambiar foto">
+              <span id="ppAvatar" class="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-nexa-orange text-white text-4xl sm:text-5xl font-extrabold flex items-center justify-center ring-[6px] ring-white overflow-hidden"></span>
+              <span class="absolute right-1 bottom-1 w-9 h-9 rounded-full bg-nexa-ink text-white flex items-center justify-center ring-4 ring-white group-hover:scale-110 transition"><i data-lucide="camera" class="!w-4 !h-4"></i></span>
+              <input class="pp-photo sr-only" type="file" accept="image/*" aria-label="Cambiar foto de perfil">
+            </label>
+            <div class="min-w-0 flex-1 sm:pt-[4.6rem]">
+              <h1 id="ppName" class="text-2xl sm:text-4xl font-extrabold tracking-tight"></h1>
+              <div id="ppMeta" class="mt-2 flex flex-wrap items-center gap-2 text-sm"></div>
+            </div>
+            <button class="pp-edit self-start sm:mt-[4.9rem] rounded-full bg-nexa-ink hover:bg-black text-white px-5 py-2.5 text-sm font-bold inline-flex items-center gap-2"><i data-lucide="pencil" class="!w-4 !h-4"></i> Editar perfil</button>
+          </div>
+          <div id="ppStats" class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+        </div>
+      </div>
+
+      <div class="mt-6 grid lg:grid-cols-[340px_minmax(0,1fr)] gap-6 items-start">
+        <!-- Info -->
+        <aside class="bg-white rounded-3xl border border-black/5 p-6 space-y-6">
+          <button id="ppStage" class="w-full text-left rounded-2xl px-4 py-3 t-soft"></button>
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-wider">Bio</p>
+            <p id="ppBio" class="mt-2 text-[15px] text-nexa-ink/80 leading-relaxed whitespace-pre-line"></p>
+          </div>
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-wider">Sobre mí</p>
+            <ul id="ppAbout" class="mt-2.5 space-y-2.5 text-sm"></ul>
+          </div>
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-wider">Mis gustos</p>
+            <div id="ppLikes" class="mt-2.5 flex flex-wrap gap-2"></div>
+          </div>
+          <div id="ppSocial" class="flex flex-wrap gap-2 empty:hidden"></div>
+        </aside>
+
+        <!-- Publicaciones -->
+        <div class="min-w-0 space-y-5">
+          <div class="bg-white rounded-3xl border border-black/5 p-2 flex gap-1" role="tablist" aria-label="Contenido del perfil">
+            <button class="pp-tab flex-1 rounded-2xl px-4 py-3 text-sm font-bold inline-flex items-center justify-center gap-2 transition" data-tab="mine" role="tab"><i data-lucide="layout-grid" class="!w-4 !h-4"></i> Mis publicaciones</button>
+            <button class="pp-tab flex-1 rounded-2xl px-4 py-3 text-sm font-bold inline-flex items-center justify-center gap-2 transition" data-tab="liked" role="tab"><i data-lucide="heart" class="!w-4 !h-4"></i> Me gustaron</button>
+          </div>
+          <div id="ppPosts" class="space-y-5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TRANSPORTE ===== -->
+    <section id="view-transport" class="app-view hidden">
+      <span class="inline-flex items-center gap-2 bg-nexa-orangeSoft text-nexa-orangeDark text-xs font-extrabold tracking-wide uppercase px-3.5 py-1.5 rounded-full"><i data-lucide="tram-front"></i> Transporte</span>
+      <h1 class="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight">Muévete por Madrid</h1>
+      <p class="mt-2 sm:text-lg text-nexa-ink/65">Las apps y tarjetas que vas a usar todos los días, explicadas en corto.</p>
+
+      <div class="mt-8 space-y-5 max-w-5xl">
+        <!-- 1. Tarjeta Transporte Público -->
+        <article class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6">
+          <div class="flex flex-col sm:flex-row gap-5 sm:gap-7">
+            <div class="sm:w-64 shrink-0 aspect-[1.6/1] rounded-2xl bg-gradient-to-br from-[#D7263D] to-[#9A1B2B] p-4 text-white flex flex-col justify-between shadow-lg shadow-red-900/20" aria-hidden="true">
+              <div class="flex items-start justify-between"><span class="text-[11px] font-extrabold tracking-wider uppercase leading-tight">Tarjeta<br>Transporte Público</span><i data-lucide="nfc" class="!w-6 !h-6 opacity-90"></i></div>
+              <div><span class="block w-9 h-7 rounded-md bg-gradient-to-br from-amber-200 to-amber-400 mb-2"></span><span class="text-xs font-bold opacity-90">Abono Joven · hasta 26 años</span></div>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-extrabold uppercase tracking-wider text-nexa-orange">Lo primero que necesitas</p>
+              <h2 class="mt-1 text-xl font-extrabold">Tarjeta Transporte Público (TTP)</h2>
+              <p class="mt-2 text-sm text-nexa-ink/75 leading-relaxed">Es tu tarjeta personal para metro, autobús y Cercanías. Le cargas el <strong>Abono Joven</strong> (si tienes menos de 26 años) y viajas todo lo que quieras por <strong>20 € al mes</strong> en toda la Comunidad de Madrid.</p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <a href="https://www.crtm.es" target="_blank" rel="noopener" class="rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2"><i data-lucide="info" class="!w-4 !h-4"></i> Más info (CRTM) <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. App para recargar -->
+        <article class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6">
+          <div class="flex flex-col sm:flex-row gap-5 sm:gap-7 sm:items-center">
+          <div class="sm:w-64 shrink-0 aspect-[1.6/1] rounded-2xl bg-gradient-to-br from-nexa-orange to-nexa-orangeDark flex items-center justify-center gap-3 text-white" aria-hidden="true"><span class="w-16 h-24 rounded-2xl border-[3px] border-white/90 flex items-center justify-center"><i data-lucide="nfc" class="!w-7 !h-7"></i></span><i data-lucide="arrow-left-right" class="!w-6 !h-6 opacity-80"></i><span class="w-20 h-12 rounded-lg bg-white/90 shadow-md"></span></div>
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-nexa-orange">Recarga desde tu móvil</p>
+            <h2 class="mt-1 text-xl font-extrabold">App Tarjeta Transporte (CRTM)</h2>
+            <p class="mt-2 text-sm text-nexa-ink/75 leading-relaxed">La app oficial del Consorcio para <strong>recargar cualquier Tarjeta Transporte Público</strong>: acercas la tarjeta a tu móvil (necesita NFC), eliges tu abono y pagas. También ves cuántos viajes o días te quedan.</p>
+            <a href="https://www.crtm.es/billetes-y-tarifas/apps-crtm/tarjeta-transporte/" target="_blank" rel="noopener" class="mt-4 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2">Descargar la app <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+          </div>
+          </div>
+        </article>
+        <!-- 3. Metro -->
+        <article class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6">
+          <div class="flex flex-col sm:flex-row gap-5 sm:gap-7 sm:items-center">
+          <div class="sm:w-64 shrink-0 aspect-[1.6/1] rounded-2xl bg-white border border-black/5 flex items-center justify-center"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIzLjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9InN2ZzIiIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCgkgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA4MzMuMyA1MDAiCgkgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgODMzLjMgNTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8cG9seWdvbiBmaWxsPSIjRkZGRkZGIiBwb2ludHM9IjE2Ni43LDI1MCA0MTYuNywxMDAgNjY2LjcsMjUwIDQxNi43LDQwMCAJIi8+Cgk8cGF0aCBmaWxsPSIjRTgxMTJEIiBkPSJNMTY2LjcsMjUwbDI1MC0xNTBsMjUwLDE1MGwtMjUwLDE1MEwxNjYuNywyNTB6IE00MTYuNywwTDAsMjUwbDQxNi43LDI1MGw0MTYuNy0yNTBMNDE2LjcsMHoiLz4KCTxyZWN0IHg9IjIxOC44IiB5PSIxNzEuOSIgZmlsbD0iIzAwMzhBOCIgd2lkdGg9IjM5NS44IiBoZWlnaHQ9IjE1Ni4zIi8+Cgk8cGF0aCBmaWxsPSIjRkZGRkZGIiBkPSJNNTM2LDI1OS43YzAtMTAuMywzLjYtMjAuNiwxNS41LTIwLjZjMTIsMCwxNS42LDEwLjMsMTUuNiwyMC42YzAsMTAuMi0zLjYsMjAuNS0xNS42LDIwLjUKCQlDNTM5LjYsMjgwLjEsNTM2LDI2OS44LDUzNiwyNTkuNyBNNTE4LjMsMjU5LjdjMCwyMC4zLDEzLDMzLjcsMzMuMSwzMy43YzIwLjIsMCwzMy4yLTEzLjQsMzMuMi0zMy43YzAtMjAuNS0xMy0zMy45LTMzLjItMzMuOQoJCUM1MzEuNCwyMjUuOCw1MTguMywyMzkuMiw1MTguMywyNTkuNyBNNDc0LjgsMjkxLjdoMTcuNnYtMjguOWMwLTExLjMsNC41LTIwLjYsMTcuNC0yMC42YzIuMSwwLDQuNywwLjIsNi4zLDAuNnYtMTYuNAoJCWMtMS4xLTAuNC0yLjYtMC42LTMuOC0wLjZjLTguNiwwLTE3LjIsNS42LTIwLjUsMTMuNmwtMC4zLTExLjloLTE2LjdWMjkxLjd6IE00NTAuOSwyMDguM2gtMTcuNnYxOS4yaC0xMC43djExLjhoMTAuN3YzNy44CgkJYzAsMTIuOCw5LjQsMTUuMiwyMC4yLDE1LjJjMy41LDAsNy4zLTAuMSwxMC4zLTAuNlYyNzhjLTEuOSwwLjQtMy42LDAuNS01LjQsMC41Yy02LDAtNy40LTEuNS03LjQtNy40di0zMS43aDEyLjl2LTExLjhoLTEyLjkKCQlWMjA4LjN6IE0zNzEuOCwyNTIuN2MwLjItNSwzLjUtMTMuNiwxNC42LTEzLjZjOC42LDAsMTIuNCw0LjcsMTQsMTMuNkgzNzEuOHogTTQxOC4xLDI2My45YzEuMi0xOS43LTkuMy0zOC4xLTMxLjEtMzguMQoJCWMtMTkuNSwwLTMyLjcsMTQuNi0zMi43LDMzLjljMCwxOS44LDEyLjUsMzMuNywzMi43LDMzLjdjMTQuNSwwLDI1LjEtNi41LDMwLTIxLjZoLTE1LjVjLTEuMSw0LTYuOCw4LjMtMTMuOSw4LjMKCQljLTkuOCwwLTE1LjMtNS4xLTE1LjctMTYuMkg0MTguMXogTTI1MCwyOTEuN2gxOC4ydi02Mi4xbDIyLDYyLjFoMTVsMjEuNy02Mi44bDAuMyw2Mi44aDE4LjJ2LTg4LjVIMzE4TDI5OC40LDI2NGwtMjEtNjAuOUgyNTAKCQlWMjkxLjd6Ii8+CjwvZz4KPC9zdmc+Cg==" alt="Logo de Metro de Madrid" class="h-20 w-auto max-w-[70%]"></div>
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-nexa-orange">Lo más rápido por el centro</p>
+            <h2 class="mt-1 text-xl font-extrabold">Metro de Madrid</h2>
+            <p class="mt-2 text-sm text-nexa-ink/75 leading-relaxed">12 líneas y un ramal, abierto de 6:00 a 1:30 aprox. En su app ves el plano, los horarios y avisos de cada línea.</p>
+            <a href="https://www.metromadrid.es" target="_blank" rel="noopener" class="mt-4 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2">Ver web y app <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+          </div>
+          </div>
+        </article>
+        <!-- 3b. Autobuses -->
+        <article class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6">
+          <div class="flex flex-col sm:flex-row gap-5 sm:gap-7 sm:items-center">
+          <div class="sm:w-64 shrink-0 aspect-[1.6/1] rounded-2xl bg-nexa-cream border border-black/5 flex items-center justify-center gap-3" aria-hidden="true">
+            <span class="w-14 h-14 rounded-2xl bg-nexa-blue text-white flex items-center justify-center shadow-md"><i data-lucide="bus" class="!w-7 !h-7"></i></span>
+            <span class="w-14 h-14 rounded-2xl bg-nexa-green text-white flex items-center justify-center shadow-md"><i data-lucide="bus" class="!w-7 !h-7"></i></span>
+            <span class="w-14 h-14 rounded-2xl bg-nexa-ink text-white flex items-center justify-center shadow-md"><i data-lucide="moon" class="!w-7 !h-7"></i></span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-nexa-orange">Llegan a todas partes</p>
+            <h2 class="mt-1 text-xl font-extrabold">Autobuses</h2>
+            <p class="mt-2 text-sm text-nexa-ink/75 leading-relaxed">En Madrid el color del autobús te dice a dónde va. Con tu abono los usas todos.</p>
+            <div class="mt-3 grid sm:grid-cols-3 gap-2.5">
+              <div class="rounded-2xl bg-sky-50 px-3.5 py-3"><p class="font-extrabold text-nexa-blue inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-nexa-blue"></span>Azules · EMT</p><p class="mt-1 text-xs text-nexa-ink/75">Dentro de la ciudad de Madrid. Los que más usarás.</p></div>
+              <div class="rounded-2xl bg-emerald-50 px-3.5 py-3"><p class="font-extrabold text-nexa-green inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-nexa-green"></span>Verdes</p><p class="mt-1 text-xs text-nexa-ink/75">A otras ciudades como Pozuelo o Alcalá. Salen de intercambiadores como Moncloa.</p></div>
+              <div class="rounded-2xl bg-nexa-mist px-3.5 py-3"><p class="font-extrabold inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-nexa-ink"></span>Búhos</p><p class="mt-1 text-xs text-nexa-ink/75">De madrugada, cuando el metro ya cerró. Casi todos salen de Cibeles.</p></div>
+            </div>
+            <a href="https://www.emtmadrid.es" target="_blank" rel="noopener" class="mt-4 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2">App EMT <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+          </div>
+          </div>
+        </article>
+        <!-- 4. Renfe Cercanías -->
+        <article class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6">
+          <div class="flex flex-col sm:flex-row gap-5 sm:gap-7 sm:items-center">
+          <div class="sm:w-64 shrink-0 aspect-[1.6/1] rounded-2xl bg-white border border-black/5 flex items-center justify-center"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+Cjxzdmcgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDMwMCAzMDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM6c2VyaWY9Imh0dHA6Ly93d3cuc2VyaWYuY29tLyIgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoyOyI+CiAgICA8Y2lyY2xlIGN4PSIxNTAiIGN5PSIxNTAiIHI9IjE1MCIgc3R5bGU9ImZpbGw6cmdiKDIzOSw0NCw0OCk7Ii8+CiAgICA8cGF0aCBkPSJNMTUwLDEwMEMxNzcuNDI5LDEwMCAyMDAsMTIyLjU3MSAyMDAsMTUwQzIwMCwxNzcuNDI5IDE3Ny40MjksMjAwIDE1MCwyMDBDMTIyLjU3MSwyMDAgMTAwLDE3Ny40MjkgMTAwLDE1MEw1MCwxNTBDNTAsMjA0Ljg1OCA5NS4xNDIsMjUwIDE1MCwyNTBDMjA0Ljg1OCwyNTAgMjUwLDIwNC44NTggMjUwLDE1MEMyNTAsOTUuMTQyIDIwNC44NTgsNTAgMTUwLDUwTDE1MCwxMDBaIiBzdHlsZT0iZmlsbDp3aGl0ZTsiLz4KPC9zdmc+Cg==" alt="Logo de Cercanías Renfe" class="h-20 w-auto max-w-[70%]"></div>
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-nexa-orange">Afueras y aeropuerto</p>
+            <h2 class="mt-1 text-xl font-extrabold">Renfe Cercanías</h2>
+            <p class="mt-2 text-sm text-nexa-ink/75 leading-relaxed">Trenes a las afueras, al aeropuerto (T4) y a escapadas como El Escorial o Aranjuez. Con tu abono puedes usarlos según tu zona.</p>
+            <a href="https://www.renfe.com/es/es/cercanias/cercanias-madrid" target="_blank" rel="noopener" class="mt-4 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2">Ver web y app <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+          </div>
+          </div>
+        </article>
+        <!-- 5. Google Maps -->
+        <article class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6">
+          <div class="flex flex-col sm:flex-row gap-5 sm:gap-7 sm:items-center">
+          <div class="sm:w-64 shrink-0 aspect-[1.6/1] rounded-2xl bg-white border border-black/5 flex items-center justify-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5Mi4zIDEzMi4zIj48cGF0aCBmaWxsPSIjMWE3M2U4IiBkPSJNNjAuMiAyLjJDNTUuOC44IDUxIDAgNDYuMSAwIDMyIDAgMTkuMyA2LjQgMTAuOCAxNi41bDIxLjggMTguM0w2MC4yIDIuMnoiLz48cGF0aCBmaWxsPSIjZWE0MzM1IiBkPSJNMTAuOCAxNi41QzQuMSAyNC41IDAgMzQuOSAwIDQ2LjFjMCA4LjcgMS43IDE1LjcgNC42IDIybDI4LTMzLjMtMjEuOC0xOC4zeiIvPjxwYXRoIGZpbGw9IiM0Mjg1ZjQiIGQ9Ik00Ni4yIDI4LjVjOS44IDAgMTcuNyA3LjkgMTcuNyAxNy43IDAgNC4zLTEuNiA4LjMtNC4yIDExLjQgMCAwIDEzLjktMTYuNiAyNy41LTMyLjctNS42LTEwLjgtMTUuMy0xOS0yNy0yMi43TDMyLjYgMzQuOGMzLjMtMy44IDguMS02LjMgMTMuNi02LjMiLz48cGF0aCBmaWxsPSIjZmJiYzA0IiBkPSJNNDYuMiA2My44Yy05LjggMC0xNy43LTcuOS0xNy43LTE3LjcgMC00LjMgMS41LTguMyA0LjEtMTEuM2wtMjggMzMuM2M0LjggMTAuNiAxMi44IDE5LjIgMjEgMjkuOWwzNC4xLTQwLjVjLTMuMyAzLjktOC4xIDYuMy0xMy41IDYuMyIvPjxwYXRoIGZpbGw9IiMzNGE4NTMiIGQ9Ik01OS4xIDEwOS4yYzE1LjQtMjQuMSAzMy4zLTM1IDMzLjMtNjMgMC03LjctMS45LTE0LjktNS4yLTIxLjNMMjUuNiA5OGMyLjYgMy40IDUuMyA3LjMgNy45IDExLjMgOS40IDE0LjUgNi44IDIzLjEgMTIuOCAyMy4xczMuNC04LjcgMTIuOC0yMy4yIi8+PC9zdmc+" alt="Logo de Google Maps" class="h-20 w-auto max-w-[70%]"></div>
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-nexa-orange">Para no perderte</p>
+            <h2 class="mt-1 text-xl font-extrabold">Google Maps</h2>
+            <p class="mt-2 text-sm text-nexa-ink/75 leading-relaxed">Te dice qué metro o autobús tomar, dónde bajarte y a qué hora pasa, en tiempo real.</p>
+            <a href="https://www.google.com/maps/dir/?api=1&amp;travelmode=transit&amp;destination=Puerta+del+Sol+Madrid" target="_blank" rel="noopener" class="mt-4 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2">Abrir rutas <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+          </div>
+          </div>
+        </article>
+
+        <!-- ¿No tienes tarjeta? -->
+        <div class="rounded-3xl bg-nexa-orangeSoft border border-nexa-orange/20 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+          <span class="w-14 h-14 rounded-2xl bg-nexa-orange text-white flex items-center justify-center shrink-0"><i data-lucide="credit-card" class="!w-7 !h-7"></i></span>
+          <div class="min-w-0 flex-1">
+            <h2 class="text-lg font-extrabold text-nexa-orangeDark">¿No tienes tarjeta?</h2>
+            <p class="mt-1 text-sm text-nexa-ink/80 leading-relaxed">Pide cita en la web del Consorcio (CRTM) con tu pasaporte y una foto, y recógela en una oficina de gestión, por ejemplo en intercambiadores grandes como Moncloa. Cuesta unos 4 €.</p>
+          </div>
+          <button class="tr-map shrink-0 rounded-full bg-nexa-ink hover:bg-black text-white px-5 py-3 text-sm font-bold inline-flex items-center justify-center gap-2"><i data-lucide="map-pin" class="!w-4 !h-4"></i> ¿Dónde la consigo?</button>
+        </div>
+
+        <!-- Políticas -->
+        <p class="text-xs text-nexa-ink/55 leading-relaxed flex gap-2">
+          <i data-lucide="info" class="!w-4 !h-4 shrink-0 mt-0.5"></i>
+          <span>Estas apps y servicios pertenecen a organismos públicos (Consorcio Regional de Transportes de Madrid, Metro de Madrid, EMT y Renfe) y a Google. NEXA no está afiliado a ellos; solo te dirige a sus webs oficiales. Precios y horarios pueden cambiar: confírmalos siempre en la fuente oficial.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== ALOJAMIENTO ===== -->
+    <section id="view-housing" class="app-view hidden">
+      <span class="inline-flex items-center gap-2 bg-nexa-orangeSoft text-nexa-orangeDark text-xs font-extrabold tracking-wide uppercase px-3.5 py-1.5 rounded-full"><i data-lucide="house"></i> Alojamiento</span>
+      <h1 class="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight">¿Aún buscando dónde vivir?</h1>
+      <p class="mt-2 sm:text-lg text-nexa-ink/65">Elige tu zona y compara las tres opciones más comunes para estudiantes.</p>
+
+      <div class="mt-6 max-w-5xl bg-white rounded-3xl border border-black/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+        <label for="housingZone" class="inline-flex items-center gap-2 font-extrabold shrink-0"><i data-lucide="map-pin" class="text-nexa-orange"></i> Ubicación</label>
+        <select id="housingZone" class="flex-1 rounded-2xl bg-nexa-mist border border-black/10 px-4 py-3 font-bold outline-none focus:ring-2 focus:ring-nexa-orange"></select>
+        <p id="housingTip" class="sm:max-w-xs text-sm text-nexa-ink/65"></p>
+      </div>
+
+      <div id="housingCards" class="mt-5 space-y-5 max-w-5xl"></div>
+
+      <!-- Comunidad: busco roomie -->
+      <article class="mt-5 max-w-5xl rounded-3xl bg-nexa-ink text-white p-5 sm:p-6 flex flex-col sm:flex-row gap-5 sm:gap-7 sm:items-center">
+        <div class="sm:w-64 shrink-0 aspect-[1.6/1] rounded-2xl overflow-hidden bg-white/10">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=70" alt="Estudiantes compartiendo piso" loading="lazy" class="w-full h-full object-cover" onerror="this.remove()">
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-extrabold uppercase tracking-wider text-[#F6A57A]">Comunidad NEXA</p>
+          <h2 class="mt-1 text-xl font-extrabold">¿Buscas con quién compartir?</h2>
+          <p class="mt-2 text-sm text-white/80 leading-relaxed">Otros estudiantes publican sus fechas, zona y presupuesto para encontrar roomie. Mira quién busca lo mismo que tú o publica tu búsqueda.</p>
+          <button class="housing-roomies mt-4 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-5 py-2.5 text-sm font-bold inline-flex items-center gap-2"><i data-lucide="users" class="!w-4 !h-4"></i> Ver «Busco roomie»</button>
+        </div>
+      </article>
+
+      <p class="mt-5 max-w-5xl text-xs text-nexa-ink/55 leading-relaxed flex gap-2">
+        <i data-lucide="info" class="!w-4 !h-4 shrink-0 mt-0.5"></i>
+        <span>Precios aproximados por mes, solo como referencia. Los enlaces llevan a buscadores externos (Google Maps, Spotahome, Idealista, HousingAnywhere); NEXA no está afiliado a ellos. Nunca pagues una fianza sin contrato firmado ni sin ver el lugar.</span>
+      </p>
+    </section>
+
     <!-- ===== MY SETUP ===== -->
     <section id="view-setup" class="app-view">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
         <div>
-          <p class="text-nexa-orange font-bold tracking-[0.2em] text-xs uppercase">My Setup</p>
-          <h1 class="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight">Hola, <span id="greetName">estudiante</span> 👋</h1>
-          <p id="greetMeta" class="mt-1 text-nexa-ink/65"></p>
+          <span class="inline-flex items-center gap-2 bg-nexa-orangeSoft text-nexa-orangeDark text-xs font-extrabold tracking-wide uppercase px-3.5 py-1.5 rounded-full"><i data-lucide="circle-check"></i> Checklist</span>
+          <h1 class="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight">MY SETUP - Tu llegada, paso a paso.<span id="greetName" hidden></span></h1>
+          <p id="greetMeta" class="mt-2 sm:text-lg text-nexa-ink/65"></p>
+        </div>
+        <div class="flex flex-wrap gap-2" aria-hidden="true">
+          <span class="tone-pre inline-flex items-center gap-2 t-soft t-text rounded-full px-3.5 py-1.5 text-xs font-extrabold"><span class="w-2.5 h-2.5 rounded-full t-bg"></span>Pre-viaje</span>
+          <span class="tone-arr inline-flex items-center gap-2 t-soft t-text rounded-full px-3.5 py-1.5 text-xs font-extrabold"><span class="w-2.5 h-2.5 rounded-full t-bg"></span>Llegada</span>
+          <span class="tone-set inline-flex items-center gap-2 t-soft t-text rounded-full px-3.5 py-1.5 text-xs font-extrabold"><span class="w-2.5 h-2.5 rounded-full t-bg"></span>Ya estoy instalado</span>
         </div>
       </div>
 
@@ -855,7 +1138,7 @@
           <h2 class="font-extrabold text-lg">Progreso global</h2>
           <button id="ringBtn" class="relative mx-auto mt-5 block w-48 h-48 group" aria-label="Ver siguiente tarea pendiente">
             <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-              <circle cx="60" cy="60" r="52" fill="none" stroke="#F4F4F6" stroke-width="12"/>
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#FFE9DC" stroke-width="12"/>
               <circle id="ring-progress" cx="60" cy="60" r="52" fill="none" stroke="#E65100" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
             </svg>
             <span class="absolute inset-0 flex flex-col items-center justify-center">
@@ -944,7 +1227,7 @@
         <div>
           <span class="inline-flex items-center gap-2 bg-nexa-orangeSoft text-nexa-orangeDark text-xs font-extrabold tracking-wide uppercase px-3.5 py-1.5 rounded-full"><i data-lucide="map-pin"></i> Geolocalización oficial</span>
           <h1 class="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight">STUDENT MAP - Tu ciudad, más clara.</h1>
-          <p class="mt-2 sm:text-lg text-nexa-ink/65">Ahora sí, un mapa real que puedas mover y ampliar. Elige una zona para explorar.</p>
+          <p class="mt-2 sm:text-lg text-nexa-ink/65">Con Google Maps: toca un lugar de la lista para verlo en el mapa y saber cómo llegar.</p>
         </div>
         <button class="back-setup text-sm font-bold rounded-full px-4 py-2 bg-white hover:bg-nexa-beige inline-flex items-center gap-1.5 border border-black/5"><i data-lucide="arrow-left"></i> My Setup</button>
       </div>
@@ -952,7 +1235,14 @@
       <div class="mt-8 grid lg:grid-cols-[1fr_420px] gap-6 items-start">
         <!-- Mapa -->
         <div class="bg-white rounded-[2rem] border border-black/5 p-2.5 shadow-sm lg:sticky lg:top-28">
-          <div id="map" class="relative z-0 isolate w-full h-[60vh] lg:h-[calc(100vh-11rem)] min-h-[420px] max-h-[760px] rounded-[1.6rem] overflow-hidden"></div>
+          <div class="flex flex-wrap items-center justify-between gap-2 px-3 pt-2 pb-3">
+            <p class="min-w-0 font-extrabold truncate inline-flex items-center gap-2"><i data-lucide="map-pin" class="text-nexa-orange shrink-0"></i><span id="gmapTitle">Madrid</span></p>
+            <div class="flex gap-2">
+              <a id="gmapRoute" href="#" target="_blank" rel="noopener" class="hidden rounded-full bg-nexa-ink hover:bg-black text-white px-4 py-2 text-xs font-bold inline-flex items-center gap-1.5"><i data-lucide="navigation" class="!w-3.5 !h-3.5"></i> Cómo llegar</a>
+              <a id="gmapOpen" href="#" target="_blank" rel="noopener" class="rounded-full border-2 border-black/10 hover:border-nexa-ink px-4 py-2 text-xs font-bold inline-flex items-center gap-1.5">Abrir en Google Maps <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+            </div>
+          </div>
+          <iframe id="gmapFrame" title="Mapa de Google con el lugar seleccionado" class="block w-full h-[60vh] lg:h-[calc(100vh-14rem)] min-h-[420px] max-h-[720px] rounded-[1.6rem] border-0 bg-nexa-mist" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
         </div>
 
         <!-- Panel de exploración -->
@@ -1005,7 +1295,7 @@
     <!-- Login -->
     <form id="loginView" class="auth-view mt-3" novalidate>
       <h2 id="authTitle" class="text-3xl font-extrabold">Inicia sesión.</h2>
-      <p class="mt-1 text-nexa-ink/65">Entra a tu Madrid City Pack y explora la ciudad</p>
+      <p class="mt-1 text-nexa-ink/65">Entra a NEXA y explora la ciudad</p>
       <label class="block mt-6 text-sm font-bold">Correo electrónico
         <!-- Cuenta demo precargada para entrar rápido -->
         <input type="email" name="email" required placeholder="tu@email.com" value="fer@nexa.mx" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" />
@@ -1112,23 +1402,94 @@
 <div id="shareModal" class="modal hidden fixed inset-0 z-[60] bg-black/50 p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
   <form id="postForm" class="modal-panel relative bg-nexa-cream w-full max-w-lg mx-auto my-8 rounded-[2rem] p-7 sm:p-9 shadow-2xl space-y-4">
     <button type="button" data-close class="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5" aria-label="Cerrar"><i data-lucide="x"></i></button>
-    <p class="text-nexa-orange font-extrabold tracking-[0.2em] text-xs">BEEN THERE</p>
-    <h2 id="shareTitle" class="text-2xl font-extrabold">Compartir mi experiencia</h2>
+    <p class="text-nexa-orange font-extrabold tracking-[0.2em] text-xs">COMUNIDAD</p>
+    <h2 id="shareTitle" class="text-2xl font-extrabold">Nueva publicación</h2>
     <label class="block text-sm font-bold">Tema
       <select name="cat" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-3 py-3 outline-none focus:ring-2 focus:ring-nexa-orange">
+        <option value="recom">Recomendaciones</option>
         <option value="alojamiento">Alojamiento</option>
         <option value="visas">Visas y Trámites</option>
         <option value="transporte">Transporte y Abono</option>
-        <option value="vida">Vida en Madrid</option>
+        <option value="roomies">Busco roomie (compañerx de piso)</option>
       </select>
     </label>
+    <!-- Solo para "Busco roomie" -->
+    <fieldset id="roomieFields" class="hidden rounded-2xl border border-black/10 bg-white p-4 space-y-3">
+      <legend class="px-1 text-sm font-extrabold">Fechas, zona y presupuesto</legend>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="block text-xs font-bold">Desde
+          <input name="rFrom" type="date" class="mt-1 w-full rounded-xl bg-nexa-cream border border-black/10 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-nexa-orange" />
+        </label>
+        <label class="block text-xs font-bold">Hasta
+          <input name="rTo" type="date" class="mt-1 w-full rounded-xl bg-nexa-cream border border-black/10 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-nexa-orange" />
+        </label>
+        <label class="block text-xs font-bold">Zona
+          <input name="rZone" maxlength="40" class="mt-1 w-full rounded-xl bg-nexa-cream border border-black/10 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Ej. Sol" />
+        </label>
+        <label class="block text-xs font-bold">Presupuesto (€/mes)
+          <input name="rBudget" type="number" min="0" max="5000" class="mt-1 w-full rounded-xl bg-nexa-cream border border-black/10 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Ej. 500" />
+        </label>
+      </div>
+      <p class="text-xs text-nexa-ink/60">Tip: abajo puedes subir fotos o un video de tu resi o piso 👇</p>
+    </fieldset>
     <label class="block text-sm font-bold">Universidad de origen
       <input name="origin" maxlength="60" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Ej. Tec de Monterrey" />
     </label>
-    <label class="block text-sm font-bold">Tu experiencia
-      <textarea name="body" required rows="5" maxlength="600" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Cuéntanos qué te funcionó y qué evitarías..."></textarea>
+    <label class="block text-sm font-bold">Tu publicación
+      <textarea name="body" required rows="4" maxlength="600" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Cuéntanos qué te funcionó y qué evitarías..."></textarea>
     </label>
-    <button class="w-full bg-nexa-orange hover:bg-nexa-orangeDark text-white rounded-full py-3.5 font-bold">Publicar experiencia</button>
+    <div>
+      <p class="text-sm font-bold">Fotos <span class="font-semibold text-nexa-ink/55">(opcional · hasta 4)</span></p>
+      <div id="postPhotos" class="mt-1.5 grid grid-cols-4 gap-2">
+        <label id="postPhotoAdd" class="aspect-square rounded-2xl border-2 border-dashed border-black/15 hover:border-nexa-orange bg-white text-nexa-ink/55 hover:text-nexa-orange flex flex-col items-center justify-center gap-1 cursor-pointer transition">
+          <i data-lucide="image-plus"></i><span class="text-[11px] font-bold">Añadir</span>
+          <input id="postPhotoInput" type="file" accept="image/*" multiple class="sr-only" aria-label="Subir fotos">
+        </label>
+      </div>
+    </div>
+    <label class="block text-sm font-bold">Enlace a tu video <span class="font-semibold text-nexa-ink/55">(opcional · TikTok, Instagram o X)</span>
+      <input name="video" type="text" inputmode="url" maxlength="300" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="https://www.tiktok.com/@..." />
+    </label>
+    <button class="w-full bg-nexa-orange hover:bg-nexa-orangeDark text-white rounded-full py-3.5 font-bold">Publicar</button>
+  </form>
+</div>
+
+<!-- Editar perfil (Inicio) -->
+<div id="profileModal" class="modal hidden fixed inset-0 z-[60] bg-black/50 p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+  <form id="profileForm" class="modal-panel relative bg-nexa-cream w-full max-w-lg mx-auto my-8 rounded-[2rem] p-7 sm:p-9 shadow-2xl space-y-4">
+    <button type="button" data-close class="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5" aria-label="Cerrar"><i data-lucide="x"></i></button>
+    <p class="text-nexa-orange font-extrabold tracking-[0.2em] text-xs">MI PERFIL</p>
+    <h2 id="profileTitle" class="text-2xl font-extrabold">Editar perfil</h2>
+    <label class="block text-sm font-bold">Bio
+      <textarea name="bio" rows="3" maxlength="200" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Cuéntale a la comunidad quién eres y qué te gusta de Madrid..."></textarea>
+    </label>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <label class="block text-sm font-bold">¿Qué estudias?
+        <input name="career" maxlength="60" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Ej. Marketing" />
+      </label>
+      <label class="block text-sm font-bold">Barrio en Madrid
+        <input name="hood" maxlength="40" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Ej. Chamberí" />
+      </label>
+      <label class="block text-sm font-bold">Fechas del intercambio
+        <input name="dates" maxlength="40" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Ej. Sep 2026 – Ene 2027" />
+      </label>
+      <label class="block text-sm font-bold">Idiomas
+        <input name="langs" maxlength="60" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Ej. Español, Inglés" />
+      </label>
+    </div>
+    <fieldset>
+      <legend class="text-sm font-bold">Mis gustos <span class="font-semibold text-nexa-ink/55">(elige los que quieras)</span></legend>
+      <div id="likeOptions" class="mt-2 flex flex-wrap gap-2"></div>
+    </fieldset>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <label class="block text-sm font-bold">Instagram
+        <input name="ig" maxlength="30" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="@usuario" />
+      </label>
+      <label class="block text-sm font-bold">TikTok
+        <input name="tt" maxlength="30" class="mt-1.5 w-full rounded-2xl bg-white border border-black/10 px-4 py-3 outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="@usuario" />
+      </label>
+    </div>
+    <button class="w-full bg-nexa-orange hover:bg-nexa-orangeDark text-white rounded-full py-3.5 font-bold">Guardar perfil</button>
   </form>
 </div>
 
@@ -1242,21 +1603,22 @@
 </div>
 
 <!-- Aviso de cookies -->
-<div id="cookieBanner" class="hidden fixed inset-x-4 bottom-4 sm:inset-x-auto sm:left-6 sm:bottom-6 sm:w-[26rem] z-[80] bg-white rounded-3xl shadow-2xl border border-black/10 p-6 modal-panel" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieText">
-  <div class="flex items-start gap-3.5">
-    <span class="w-11 h-11 rounded-2xl bg-nexa-orangeSoft text-nexa-orangeDark flex items-center justify-center shrink-0"><i data-lucide="cookie" class="!w-6 !h-6"></i></span>
-    <div>
-      <p id="cookieTitle" class="font-extrabold">Tu privacidad importa</p>
-      <p id="cookieText" class="mt-1 text-sm text-nexa-ink/70 leading-relaxed">Usamos cookies necesarias para que NEXA funcione y, si nos dejas, otras para recordar tus preferencias y mejorar la plataforma. Puedes cambiar tu elección cuando quieras.</p>
+<div id="cookieBanner" class="hidden fixed inset-x-0 bottom-0 z-[80] bg-white border-t border-black/10 shadow-[0_-12px_40px_-12px_rgba(26,26,26,.3)] modal-panel" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieText">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+    <div class="flex items-start gap-3.5 flex-1 min-w-0">
+      <span class="w-11 h-11 rounded-2xl bg-nexa-orangeSoft text-nexa-orangeDark flex items-center justify-center shrink-0"><i data-lucide="cookie" class="!w-6 !h-6"></i></span>
+      <div class="min-w-0">
+        <p id="cookieTitle" class="font-extrabold">Tu privacidad importa</p>
+        <p id="cookieText" class="mt-0.5 text-sm text-nexa-ink/70 leading-relaxed">Usamos cookies necesarias para que NEXA funcione y, si nos dejas, otras para recordar tus preferencias y mejorar la plataforma. Puedes cambiar tu elección cuando quieras.</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 sm:flex gap-2 shrink-0">
+      <button class="rounded-xl bg-nexa-orange hover:bg-nexa-orangeDark text-white px-5 py-2.5 text-sm font-bold" data-cookie="accept">Aceptar</button>
+      <button class="rounded-xl border-2 border-black/10 hover:border-nexa-ink px-5 py-2 text-sm font-bold" data-cookie="reject">Rechazar</button>
+      <button class="col-span-2 rounded-xl bg-nexa-mist hover:bg-nexa-beige px-5 py-2.5 text-sm font-bold inline-flex items-center justify-center gap-1.5" data-cookie="config"><i data-lucide="settings-2" class="!w-4 !h-4"></i> Configuración</button>
     </div>
   </div>
-  <div class="mt-5 grid grid-cols-2 gap-2">
-    <button class="rounded-xl border-2 border-black/10 hover:border-nexa-ink py-2.5 text-sm font-bold" data-cookie="reject">Rechazar</button>
-    <button class="rounded-xl bg-nexa-orange hover:bg-nexa-orangeDark text-white py-2.5 text-sm font-bold" data-cookie="accept">Aceptar todas</button>
-    <button class="col-span-2 py-2 text-sm font-bold text-nexa-ink/70 hover:text-nexa-ink underline underline-offset-4" data-cookie="config">Configurar cookies</button>
-  </div>
 </div>
-
 <!-- Configuración de cookies -->
 <div id="cookieModal" class="modal hidden fixed inset-0 z-[85] bg-black/50 p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="cookieModalTitle">
   <form id="cookieForm" class="modal-panel relative bg-nexa-cream w-full max-w-lg mx-auto my-8 rounded-[2rem] p-7 sm:p-9 shadow-2xl">
@@ -1462,7 +1824,7 @@
         const u = Store.data.user || { name: 'Estudiante' };
         $('#appDrawerName').textContent = u.name;
         $('#appDrawerMeta').textContent = [u.university, u.origin].filter(Boolean).join(' · ');
-        $('#appDrawerAvatar').textContent = u.name.split(/\s+/).slice(0, 2).map(w => w.charAt(0).toUpperCase()).join('');
+        Profile.avatar($('#appDrawerAvatar'), u.name.split(/\s+/).slice(0, 2).map(w => w.charAt(0).toUpperCase()).join(''));
       }
       this.el.classList.add('open'); this.el.setAttribute('aria-hidden', 'false');
       this.overlay.classList.remove('pointer-events-none'); this.overlay.style.opacity = '1';
@@ -1643,7 +2005,7 @@
     $('#appShell').classList.remove('hidden');
     const nick = paintUser(user);
     setLang(Store.data.lang);
-    App.show(App.view || 'setup');
+    App.show(App.view || 'home');
     window.scrollTo(0, 0);
     if (!quiet) toast(`¡Bienvenidx, ${nick}!`);
   }
@@ -1681,7 +2043,22 @@
       steps: ['Revisa la lista de requisitos de tu consulado: puede variar según el país.', 'Reúne los documentos, con apostillas y traducciones juradas cuando se pidan.',
         'Pide cita previa en el consulado o en su centro de solicitudes.', 'Acude en persona con originales y copias, y paga la tasa.',
         'Espera la resolución (consulta el plazo de tu consulado) y recoge el pasaporte con el visado.'],
-      info: 'Inicia el trámite entre 60 y 90 días antes de tu vuelo. Revisa que tu NIE quede impreso en la etiqueta del visado al recoger el pasaporte.' },
+      info: 'Inicia el trámite entre 60 y 90 días antes de tu vuelo. Revisa que tu NIE quede impreso en la etiqueta del visado al recoger el pasaporte.',
+      // Versión visual del detalle (datos rápidos · documentos para palomear · línea de tiempo)
+      visual: {
+        quick: [['calendar-clock', 'Cuándo', '60–90 días antes del vuelo'], ['map-pin', 'Dónde', 'Consulado de España en tu país'],
+          ['hourglass', 'Respuesta', 'Aprox. 1 mes'], ['banknote', 'Costo', 'Tasa consular (varía por país)']],
+        docs: [['file-pen-line', 'Formulario de solicitud', 'Visado nacional, lleno y firmado'], ['book-user', 'Pasaporte', 'Vigente toda tu estancia'],
+          ['camera', 'Foto tamaño pasaporte', 'Reciente y con fondo blanco'], ['graduation-cap', 'Carta de admisión', 'De tu universidad en España'],
+          ['wallet', 'Medios económicos', '100 % del IPREM por cada mes'], ['shield-plus', 'Seguro médico', 'Sin copagos ni carencias'],
+          ['scale', 'Antecedentes penales', 'Apostillado (más de 180 días)'], ['stethoscope', 'Certificado médico', 'Para estancias de más de 180 días'],
+          ['receipt', 'Pago de la tasa', 'Justificante del pago']],
+        steps: [['search', 'Revisa los requisitos', 'Entra a la web de tu consulado: pueden cambiar según el país.'],
+          ['folder-check', 'Reúne tus documentos', 'Con apostillas y traducciones juradas cuando las pidan.'],
+          ['calendar-check', 'Pide tu cita', 'En el consulado o en su centro de solicitudes (por ejemplo, BLS).'],
+          ['building-2', 'Ve a tu cita', 'Lleva originales y copias, y paga la tasa ahí.'],
+          ['plane', 'Recoge tu visado', 'Revisa que tu NIE venga en la etiqueta del visado. ¡Listo para volar!']]
+      } },
     { id: 'seguro', stage: 'pre', kind: 'tramite', icon: 'shield-plus', title: 'Contratar seguro médico (Obligatorio para visa)',
       tag: 'Obligatorio visa', tone: 'red', summary: 'Póliza con aseguradora autorizada en España, sin copagos, sin carencias y con cobertura de repatriación mínima de 30.000€.',
       what: 'Póliza de salud privada, contratada con una aseguradora autorizada para operar en España, válida durante toda tu estancia.',
@@ -1803,6 +2180,138 @@
   /* ---------------------------------------------------------------
      5. My Setup — lógica
   --------------------------------------------------------------- */
+  // Versión visual del detalle de cada tarea: datos rápidos, opciones, checklist para palomear y línea de tiempo
+  const CHECKLIST = { docsTitle: 'Tu checklist', docsIcon: 'list-checks', docsHint: 'Toca lo que ya hiciste.', doneWord: 'hechos' };
+  const TASK_VISUALS = {
+    seguro: {
+      quick: [['calendar-clock', 'Cuándo', 'Antes de pedir la visa'], ['globe', 'Dónde', 'Online o en la aseguradora'],
+        ['shield-check', 'Debe ser', 'Sin copagos ni carencias'], ['plane', 'Incluye', 'Repatriación']],
+      docs: [['book-user', 'Pasaporte', 'Para contratar la póliza'], ['graduation-cap', 'Carta de admisión', 'Con las fechas de tu estancia'],
+        ['house', 'Dirección en España', 'Si ya la tienes'], ['credit-card', 'Tarjeta o cuenta', 'Para pagar la póliza']],
+      steps: [['search', 'Compara pólizas', 'Busca planes para estudiantes con cobertura completa en España.'],
+        ['list-checks', 'Revisa las condiciones', 'Sin copagos, sin carencias y con repatriación incluida.'],
+        ['pen-line', 'Contrátala', 'Por la duración completa de tu estancia.'],
+        ['download', 'Descarga el certificado', 'En español, y guárdalo en tu Binder virtual.']]
+    },
+    alojamiento: {
+      quick: [['calendar-clock', 'Cuándo', 'Antes de viajar'], ['map-pin', 'Dónde', 'Residencias o portales verificados'],
+        ['badge-check', 'Para qué', 'Empadronarte y pedir la TIE'], ['triangle-alert', 'Ojo', 'Nunca pagues sin contrato']],
+      docs: [['book-user', 'Pasaporte', 'Te lo pedirán al firmar'], ['graduation-cap', 'Carta de admisión', 'O tu matrícula'],
+        ['file-text', 'Contrato o reserva', 'Firmado por ambas partes'], ['receipt', 'Pago de la fianza', 'Siempre con recibo']],
+      steps: [['wallet', 'Define presupuesto y zona', 'Según dónde está tu campus.'], ['search', 'Busca opciones', 'En residencias o portales verificados.'],
+        ['video', 'Visita antes de pagar', 'En persona o por videollamada.'], ['pen-line', 'Firma el contrato', 'Y confirma que podrás empadronarte.'],
+        ['receipt', 'Paga la fianza', 'Solo con el contrato firmado y pide recibo.']],
+      link: ['housing', 'Ver opciones de alojamiento']
+    },
+    vuelo: {
+      quick: [['calendar-clock', 'Cuándo llegar', '5–10 días antes de clases'], ['plane-landing', 'Aeropuerto', 'Madrid-Barajas (MAD)'],
+        ['clipboard-check', 'En frontera', 'Motivo, alojamiento y dinero'], ['train-front', 'Al salir', 'Metro L8, Cercanías o bus Exprés']],
+      docsTitle: 'Tu carpeta de viaje', docsHint: 'Toca lo que ya metiste en tu carpeta.',
+      docs: [['book-user', 'Pasaporte con visado', 'Revisa la fecha de validez'], ['ticket', 'Billete de avión', 'Impreso o en el móvil'],
+        ['graduation-cap', 'Carta de admisión', 'De tu universidad en España'], ['shield-plus', 'Seguro médico', 'Certificado en español'],
+        ['house', 'Justificante de alojamiento', 'Contrato o reserva'], ['copy', 'Copias de todo', 'Impresas y digitales']],
+      steps: [['ticket', 'Compra tu vuelo', 'Para llegar entre 5 y 10 días antes de clases.'], ['folder', 'Prepara tu carpeta', 'Con originales y copias.'],
+        ['briefcase', 'Llévala contigo', 'Siempre en el equipaje de mano.'], ['stamp', 'Pasa el control', 'Con la documentación a mano.'],
+        ['train-front', 'Llega a tu casa', 'En Metro (L8), Cercanías o bus Exprés Aeropuerto.']],
+      link: ['transport', 'Ver cómo moverte']
+    },
+    presupuesto: {
+      quick: [['house', 'Alojamiento', '550 €'], ['shopping-basket', 'Comida', '220 €'], ['train-front', 'Abono Joven', '20 €'], ['party-popper', 'Ocio', '150 €']],
+      optionsTitle: 'Tu mes típico',
+      options: [['calculator', 'Unos 940 € al mes', 'Más un 10–15 % extra para imprevistos.']],
+      ...CHECKLIST,
+      docs: [['piggy-bank', 'Aparta para imprevistos', 'Un 10–15 % extra cada mes'], ['calendar', 'Ahorra para el primer mes', 'Fianza, compras para la casa y la SIM'],
+        ['banknote', 'Lleva algo de efectivo', 'Para mercados y sitios pequeños'], ['credit-card', 'Tarjeta sin comisiones', 'Por cambio de divisa']]
+    },
+    llegada: {
+      quick: [['calendar-check', 'Cuándo', 'El día que llegas'], ['house', 'Dónde', 'Tu piso o residencia'],
+        ['users', 'Con quién', 'Propietario, agencia o recepción'], ['camera', 'Clave', 'Fotos con fecha de todo']],
+      docs: [['book-user', 'Pasaporte', 'Para identificarte'], ['file-text', 'Contrato de alquiler', 'Tu copia firmada'],
+        ['receipt', 'Pago de la fianza', 'El justificante'], ['clipboard-list', 'Inventario', 'Si te lo dan']],
+      steps: [['clock', 'Confirma la entrega de llaves', 'Hora y lugar exactos.'], ['camera', 'Revisa y haz fotos', 'Fotos y vídeo con fecha de cada estancia.'],
+        ['pen-line', 'Firma el inventario', 'Anota cualquier daño que veas.'], ['key-round', 'Recibe tus llaves', 'Y comprueba que funcionan.'],
+        ['mail', 'Envía las fotos', 'Por correo al propietario ese mismo día.']]
+    },
+    sim: {
+      quick: [['calendar-check', 'Cuándo', 'El primer día'], ['map-pin', 'Dónde', 'Sol, Gran Vía o centros comerciales'],
+        ['book-user', 'Necesitas', 'Tu pasaporte'], ['clock', 'Horario', '10:00–21:00, también sábados']],
+      options: [['wallet', 'Prepago', 'Sin permanencia y con recargas mensuales.'], ['file-text', 'Contrato', 'Más datos; suele pedir cuenta española.'],
+        ['smartphone', 'eSIM', 'Se activa desde el móvil, sin pasar por tienda.']],
+      ...CHECKLIST,
+      docs: [['lock-open', 'Móvil liberado', 'Que acepte cualquier compañía'], ['book-user', 'Lleva tu pasaporte', 'Para dar de alta la línea'],
+        ['credit-card', 'Tarjeta o efectivo', 'Para pagar en tienda'], ['message-square', 'Línea activa', 'Los códigos del banco llegan por SMS']]
+    },
+    transporte: {
+      quick: [['banknote', 'Precio', 'Abono Joven: 20 €/mes'], ['user', 'Para', 'Menores de 26 años'],
+        ['globe', 'Dónde', 'Web del Consorcio u oficinas'], ['train-front', 'Vale en', 'Metro, bus y Cercanías']],
+      docs: [['book-user', 'Pasaporte o NIE', 'Para la solicitud'], ['camera', 'Foto reciente', 'Tamaño carné'],
+        ['mail', 'Correo electrónico', 'Para recibir avisos'], ['credit-card', 'Tarjeta bancaria', 'Para pagar la emisión']],
+      steps: [['globe', 'Solicita tu TTP', 'En la web del Consorcio de Transportes.'], ['upload', 'Sube tus datos', 'Tu foto y tu documento de identidad.'],
+        ['credit-card', 'Paga la emisión', 'Con tarjeta bancaria.'], ['package', 'Recibe tu tarjeta', 'En la oficina elegida o en casa.'],
+        ['refresh-cw', 'Carga el Abono Joven', 'En las máquinas del Metro o en la app.']],
+      link: ['transport', 'Ver guía de transporte']
+    },
+    padron: {
+      quick: [['calendar-clock', 'Cuándo', 'Al llegar, antes de la TIE'], ['building-2', 'Dónde', 'Oficina Línea Madrid'],
+        ['phone', 'Cita', 'madrid.es o el 010'], ['banknote', 'Costo', 'Gratis']],
+      docs: [['book-user', 'Pasaporte', 'El original'], ['file-pen-line', 'Hoja de inscripción', 'Rellena y firmada'],
+        ['file-text', 'Contrato o autorización', 'A tu nombre, o firmada por el titular con copia de su DNI']],
+      steps: [['calendar-check', 'Pide tu cita', 'En madrid.es o llamando al 010.'], ['file-pen-line', 'Rellena la hoja', 'La hoja de inscripción padronal.'],
+        ['building-2', 'Ve a la oficina', 'Con tus documentos originales.'], ['badge-check', 'Recibe tu volante', 'O el certificado si lo necesitas para la TIE.']],
+      map: { cat: 'tramites', place: 'oac' }
+    },
+    universidad: {
+      quick: [['calendar', 'Cuándo', 'En el Welcome Day'], ['school', 'Dónde', 'ORI de tu campus'],
+        ['id-card', 'Te llevas', 'Carné y correo de estudiante'], ['file-check', 'Pide', 'Tu arrival certificate']],
+      docs: [['book-user', 'Pasaporte', 'Para identificarte'], ['graduation-cap', 'Carta de admisión', 'De tu universidad'],
+        ['file-check', 'Learning Agreement', 'Firmado'], ['camera', 'Foto tamaño carné', 'Para tu carné'], ['shield-plus', 'Seguro médico', 'El certificado']],
+      steps: [['mail', 'Revisa tu correo', 'Ahí te dicen la fecha del Welcome Day.'], ['school', 'Ve a la ORI', 'La Oficina de Relaciones Internacionales de tu campus.'],
+        ['pen-line', 'Entrega tus documentos', 'Y firma tu certificado de llegada.'], ['book-open', 'Completa tu matrícula', 'Y confirma tus asignaturas.'],
+        ['id-card', 'Recoge tu carné', 'Y activa tu correo de estudiante.']]
+    },
+    supermercados: {
+      quick: [['clock', 'Horario', 'L–S 9:00–21:30'], ['calendar-x', 'Domingos', 'Muchos cierran'],
+        ['credit-card', 'Pago', 'Tarjeta, móvil o efectivo'], ['shopping-bag', 'Bolsas', 'Se cobran: lleva la tuya']],
+      options: [['shopping-cart', 'Mercadona', 'Buena relación calidad-precio.'], ['tag', 'Lidl y Dia', 'Opciones económicas.'],
+        ['moon', 'Carrefour Express', 'Abiertos hasta tarde en el centro.'], ['carrot', 'Mercados municipales', 'Fruta, verdura y producto fresco.']],
+      ...CHECKLIST,
+      docs: [['map-pin', 'Ubica tu súper', 'El más cercano a casa'], ['arrow-left-right', 'Compara precios', 'Durante la primera semana'],
+        ['smartphone', 'Descarga su app', 'Con ofertas y compra online'], ['shopping-bag', 'Bolsa reutilizable', 'Para no pagar bolsas']]
+    },
+    farmacias: {
+      quick: [['siren', 'Emergencias', 'Llama al 112'], ['clock', 'Horario', '9:30–21:00 aprox.'],
+        ['moon', 'De guardia', '24 h por turnos'], ['shield-plus', 'Lleva', 'Tarjeta del seguro y pasaporte']],
+      options: [['pill', 'Farmacia de barrio', 'Cruz verde: medicinas y consejo.'], ['moon', 'Farmacia de guardia', 'Abierta 24 h por turnos.'],
+        ['hospital', 'Urgencias', 'Hospital o centro concertado con tu seguro.']],
+      ...CHECKLIST,
+      docs: [['map-pin', 'Ubica tu farmacia', 'La más cercana a casa'], ['phone', 'Teléfono del seguro', 'Guarda su línea 24 h'],
+        ['siren', 'Guarda el 112', 'Para emergencias'], ['wallet', 'Tarjeta del seguro', 'Siempre en la cartera']]
+    },
+    lugares: {
+      quick: [['utensils', 'Comida', '14:00–16:00'], ['moon', 'Cena', 'Desde las 21:00'],
+        ['train-front', 'Metro', 'Cierra sobre la 1:30'], ['ticket', 'Estudiantes', 'Descuentos en museos']],
+      optionsTitle: 'Barrios para conocer',
+      options: [['coffee', 'Malasaña', 'Bares, cafés y ambiente joven.'], ['wine', 'La Latina', 'Tapas los domingos por la Cava Baja.'],
+        ['trees', 'Retiro', 'Parque, barcas y Palacio de Cristal.'], ['sunset', 'Moncloa', 'Zona universitaria y Templo de Debod.']],
+      docsTitle: 'Tu lista de planes', docsIcon: 'sparkles', docsHint: 'Toca los planes que ya hiciste.', doneWord: 'hechos',
+      docs: [['wine', 'Tapas en La Latina', 'Un domingo por la Cava Baja'], ['sailboat', 'Barca en el Retiro', 'En el Estanque Grande'],
+        ['sunset', 'Atardecer en Debod', 'Llega con 30 min de margen'], ['landmark', 'Un museo gratis', 'Con tu carnet de estudiante']]
+    },
+    gastos: {
+      quick: [['landmark', 'Necesitas', 'Cuenta con IBAN español'], ['smartphone', 'Opciones', 'Bancos o neobancos'],
+        ['percent', 'Revisa', 'Comisiones'], ['house', 'Para', 'Alquiler y día a día']],
+      docs: [['book-user', 'Pasaporte', 'Para abrir la cuenta'], ['id-card', 'NIE o TIE', 'Algunos bancos lo piden'],
+        ['map-pinned', 'Empadronamiento', 'El certificado'], ['graduation-cap', 'Carta de la universidad', 'Para cuentas de estudiante']],
+      steps: [['arrow-left-right', 'Compara bancos', 'Comisiones y cuentas para estudiantes.'], ['smartphone', 'Solicita tu cuenta', 'Online o con cita en una oficina.'],
+        ['scan-face', 'Verifica tu identidad', 'Con tu documentación.'], ['credit-card', 'Recibe IBAN y tarjeta', 'Ya puedes pagar el alquiler.'],
+        ['bell', 'Activa alertas', 'Y revisa tu presupuesto cada semana.']]
+    }
+  };
+  TASKS.forEach(t => {
+    const v = TASK_VISUALS[t.id]; if (!v) return;
+    t.visual = v; if (v.map && !t.map) t.map = v.map;
+  });
+
   const STAGE_ORDER = ['pre', 'arr', 'set', 'all'];
   const Setup = {
     filter: 'pre',
@@ -1812,24 +2321,42 @@
       const d = items.filter(t => Store.data.done[t.id]).length;
       return items.length ? Math.round(d / items.length * 100) : 0;
     },
+    // Una etapa se desbloquea cuando todas las tareas de las etapas anteriores están completadas
+    locked(k) {
+      const i = STAGE_ORDER.indexOf(k);
+      if (k === 'all' || i <= 0) return false;
+      const all = this.all();
+      return STAGE_ORDER.slice(0, i).some(p => all.some(t => t.stage === p && !Store.data.done[t.id]));
+    },
+    // Etapa anterior que falta terminar para desbloquear k
+    blocker(k) {
+      const all = this.all();
+      return STAGE_ORDER.slice(0, STAGE_ORDER.indexOf(k)).find(p => all.some(t => t.stage === p && !Store.data.done[t.id]));
+    },
+    lockedMsg(k) { return `Termina «${STAGES[this.blocker(k)]}» para desbloquear esta etapa.`; },
     taskHTML(t, n) {
       const done = !!Store.data.done[t.id];
       const open = this.open.has(t.id);
+      const locked = this.locked(t.stage);
       const tagTone = t.tone === 'red' ? 'bg-red-50 text-nexa-sos'
         : t.custom ? 'bg-nexa-orangeSoft text-nexa-orangeDark' : 'bg-nexa-mist text-nexa-ink/70';
       return `
-        <article class="task ${done ? 'done bg-emerald-50/70 border-emerald-200' : 'bg-white border-black/10'} rounded-3xl border-2 transition" data-id="${esc(t.id)}" data-open="${open}">
+        <article class="task tone-${t.stage} ${locked ? 'locked bg-white/60 border-black/10' : done ? 'done bg-emerald-50/70 border-emerald-200' : 'bg-white border-black/10'} rounded-3xl border-2 transition" data-id="${esc(t.id)}" data-open="${open}">
           <div class="flex items-start gap-3.5 p-4 sm:p-5">
+            ${locked ? `
+            <button class="task-lock w-6 h-6 mt-0.5 rounded-md bg-nexa-mist text-nexa-ink/55 flex items-center justify-center shrink-0" title="${this.lockedMsg(t.stage)}" aria-label="Tarea bloqueada: ${esc(t.title)}">
+              <i data-lucide="lock" class="!w-3.5 !h-3.5"></i>
+            </button>` : `
             <label class="relative flex items-center cursor-pointer mt-0.5" title="${done ? 'Marcar como pendiente' : 'Marcar como completada'}">
               <input type="checkbox" class="task-check peer sr-only" ${done ? 'checked' : ''} aria-label="Completar: ${esc(t.title)}">
-              <span class="w-6 h-6 rounded-md border-2 ${done ? 'bg-nexa-orange border-nexa-orange' : 'border-nexa-ink bg-white'} flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-nexa-blue">
+              <span class="w-6 h-6 rounded-md border-2 ${done ? 't-bg t-border' : 'border-nexa-ink bg-white'} flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-nexa-blue">
                 ${done ? '<i data-lucide="check" class="text-white"></i>' : ''}
               </span>
-            </label>
+            </label>`}
             <button class="task-toggle flex-1 flex items-start justify-between gap-3 text-left" aria-expanded="${open}" aria-controls="body-${esc(t.id)}">
               <span class="min-w-0">
                 <span class="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-                  <span class="text-sm font-bold text-nexa-ink/40">${String(n).padStart(2, '0')}.</span>
+                  <span class="text-sm font-extrabold t-text">${String(n).padStart(2, '0')}.</span>
                   <span class="task-title text-base font-extrabold">${esc(t.title)}</span>
                   <span class="text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-full ${tagTone}">${esc(t.tag || 'Personal')}</span>
                 </span>
@@ -1845,6 +2372,89 @@
         </article>`;
     },
     // Detalle de cada tarea: "tramite" (trámites y documentos) o "vida" (vida cotidiana y servicios)
+    // Detalle visual (prueba en la tarea de visa): datos rápidos, documentos para palomear y línea de tiempo
+    visualHTML(t) {
+      const v = t.visual, prog = (Store.data.taskProgress || {})[t.id] || { docs: [], steps: 0 };
+      const docsDone = v.docs.filter((_, i) => prog.docs.includes(i)).length;
+      const pct = Math.round(docsDone / v.docs.length * 100);
+      return `
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          ${v.quick.map(([ic, label, val]) => `
+            <div class="rounded-2xl bg-white border border-black/5 p-3.5">
+              <span class="w-9 h-9 rounded-xl t-soft t-text flex items-center justify-center"><i data-lucide="${ic}" class="!w-5 !h-5"></i></span>
+              <p class="mt-2 text-[11px] font-extrabold uppercase tracking-wider text-nexa-ink/50">${label}</p>
+              <p class="text-sm font-extrabold leading-snug">${val}</p>
+            </div>`).join('')}
+        </div>
+
+        <div class="rounded-2xl t-soft px-4 py-3.5 flex gap-3">
+          <i data-lucide="info" class="t-text shrink-0 mt-0.5"></i>
+          <p class="text-sm leading-relaxed"><strong>¿Qué es?</strong> ${esc(t.what.replace(/\s*[^.]*:\s*$/, ''))}</p>
+        </div>
+        ${v.options ? `
+        <div>
+          <p class="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2"><i data-lucide="layout-grid" class="t-text"></i> ${v.optionsTitle || 'Tus opciones'}</p>
+          <div class="mt-3 grid sm:grid-cols-2 ${v.options.length > 2 ? 'lg:grid-cols-' + Math.min(v.options.length, 4) : ''} gap-2.5">
+            ${v.options.map(([ic, name, detail]) => `
+              <div class="rounded-2xl bg-white border border-black/5 p-4">
+                <span class="w-10 h-10 rounded-xl t-bg text-white flex items-center justify-center"><i data-lucide="${ic}" class="!w-5 !h-5"></i></span>
+                <p class="mt-2.5 font-extrabold">${name}</p>
+                <p class="mt-0.5 text-xs text-nexa-ink/65 leading-snug">${detail}</p>
+              </div>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <div>
+          <div class="flex items-end justify-between gap-3">
+            <p class="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2"><i data-lucide="${v.docsIcon || 'folder-check'}" class="t-text"></i> ${v.docsTitle || 'Tus documentos'}</p>
+            <p class="text-sm font-extrabold t-text">${docsDone} de ${v.docs.length} ${v.doneWord || 'listos'}</p>
+          </div>
+          <div class="mt-2 h-2.5 rounded-full bg-white overflow-hidden"><div class="h-full rounded-full t-bg transition-all duration-500" style="width:${pct}%"></div></div>
+          <p class="mt-2 text-xs text-nexa-ink/55">${v.docsHint || 'Toca cada documento cuando ya lo tengas.'}</p>
+          <div class="mt-3 grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+            ${v.docs.map(([ic, name, detail], i) => {
+              const on = prog.docs.includes(i);
+              return `
+              <button class="doc-tile text-left rounded-2xl border-2 p-3.5 flex items-start gap-3 transition ${on ? 't-border bg-white' : 'border-transparent bg-white/70 hover:bg-white'}" data-i="${i}" aria-pressed="${on}">
+                <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${on ? 't-bg text-white' : 'bg-nexa-mist text-nexa-ink/60'}"><i data-lucide="${on ? 'check' : ic}" class="!w-5 !h-5"></i></span>
+                <span class="min-w-0"><span class="block text-sm font-extrabold ${on ? 'line-through decoration-2 text-nexa-ink/60' : ''}">${name}</span><span class="block mt-0.5 text-xs text-nexa-ink/60 leading-snug">${detail}</span></span>
+              </button>`;
+            }).join('')}
+          </div>
+        </div>
+
+        ${v.steps ? `<div>
+          <p class="text-xs font-extrabold uppercase tracking-wider flex items-center gap-2"><i data-lucide="route" class="t-text"></i> Paso a paso</p>
+          <p class="mt-1 text-xs text-nexa-ink/55">Toca un paso para marcar hasta dónde vas.</p>
+          <ol class="mt-4">
+            ${v.steps.map(([ic, name, detail], i) => {
+              const done = i < prog.steps, last = i === v.steps.length - 1;
+              return `
+              <li class="relative flex gap-4 ${last ? '' : 'pb-6'}">
+                ${last ? '' : `<span class="absolute left-5 top-11 -bottom-0 w-0.5 ${done ? 't-bg' : 'bg-black/10'}" aria-hidden="true"></span>`}
+                <button class="step-dot relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition ${done ? 't-bg text-white' : 'bg-white border-2 border-black/10 text-nexa-ink/60 hover:border-black/25'}" data-i="${i}" aria-label="Marcar hecho hasta el paso ${i + 1}: ${name}" aria-pressed="${done}"><i data-lucide="${done ? 'check' : ic}" class="!w-5 !h-5"></i></button>
+                <div class="pt-1.5 min-w-0">
+                  <p class="text-[11px] font-extrabold uppercase tracking-wider ${done ? 't-text' : 'text-nexa-ink/45'}">Paso ${i + 1}${done ? ' · hecho' : ''}</p>
+                  <p class="font-extrabold">${name}</p>
+                  <p class="mt-0.5 text-sm text-nexa-ink/65 leading-relaxed">${detail}</p>
+                </div>
+              </li>`;
+            }).join('')}
+          </ol>
+        </div>` : ''}
+        ${t.map || v.link ? `
+        <div class="rounded-2xl bg-white border border-black/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-emerald-50 text-nexa-green flex items-center justify-center shrink-0"><i data-lucide="${t.map ? 'map-pin' : 'arrow-up-right'}" class="!w-5 !h-5"></i></span>
+          <p class="flex-1 text-sm text-nexa-ink/75">${esc(t.where)}</p>
+          ${t.map ? `<button class="task-map shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold" data-cat="${esc(t.map.cat || 'all')}" data-place="${esc(t.map.place || '')}"><i data-lucide="map-pin" class="!w-4 !h-4"></i> Ver en Student Map</button>`
+            : `<button class="task-go shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold" data-view="${v.link[0]}">${v.link[1]} <i data-lucide="arrow-right" class="!w-4 !h-4"></i></button>`}
+        </div>` : ''}
+
+        <div class="rounded-2xl bg-nexa-ink text-white px-4 py-3.5 flex gap-3">
+          <i data-lucide="lightbulb" class="text-[#F6A57A] shrink-0 mt-0.5"></i>
+          <p class="text-sm leading-relaxed"><strong>Tip NEXA:</strong> ${esc(t.info || t.tips || '')}</p>
+        </div>`;
+    },
     bodyHTML(t) {
       const title = label => `<p class="text-xs font-extrabold uppercase tracking-wider text-nexa-ink">${label}</p>`;
       const para = s => s ? `<p class="mt-1.5 text-sm text-nexa-ink/75 leading-relaxed">${esc(s)}</p>` : '';
@@ -1861,6 +2471,7 @@
           ${para(s)}
         </div>` : '';
 
+      if (t.visual) return this.visualHTML(t);
       if (t.kind === 'vida') {
         const m = t.map || {};
         return [
@@ -1890,15 +2501,17 @@
     groupHTML(k, items) {
       const n = STAGE_ORDER.indexOf(k) + 1;
       const pct = this.stagePct(items);
-      const started = pct > 0; // la etapa se pinta en naranja cuando ya tiene avance
+      const locked = this.locked(k);
       return `
-        <section>
-          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b-2 ${started ? 'border-nexa-orange' : 'border-black/15'}">
-            <h2 class="flex items-center gap-2.5 text-xl sm:text-2xl font-extrabold">
-              <span class="w-8 h-8 rounded-full ${started ? 'bg-nexa-orange' : 'bg-nexa-ink'} text-white text-sm flex items-center justify-center">${n}</span>${STAGES[k]}
+        <section class="tone-${k}">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b-2 ${locked ? 'border-black/15' : 't-border'}">
+            <h2 class="flex items-center gap-2.5 text-xl sm:text-2xl font-extrabold ${locked ? 'text-nexa-ink/55' : ''}">
+              <span class="w-8 h-8 rounded-full ${locked ? 'bg-nexa-ink/40' : 't-bg'} text-white text-sm flex items-center justify-center">${locked ? '<i data-lucide="lock" class="!w-4 !h-4"></i>' : n}</span>${STAGES[k]}
             </h2>
-            <p class="text-sm font-semibold text-nexa-ink/60 flex items-center gap-2">Progreso de etapa:
-              <span class="${started ? 'bg-nexa-orangeSoft text-nexa-orangeDark' : 'bg-black/5 text-nexa-ink/70'} font-extrabold px-3 py-1 rounded-lg">${pct}%</span></p>
+            ${locked
+              ? `<p class="text-sm font-bold text-nexa-ink/60 bg-nexa-mist rounded-lg px-3 py-1.5 flex items-center gap-2"><i data-lucide="lock" class="!w-4 !h-4"></i>${this.lockedMsg(k)}</p>`
+              : `<p class="text-sm font-semibold text-nexa-ink/60 flex items-center gap-2">Progreso de etapa:
+              <span class="t-soft t-text font-extrabold px-3 py-1 rounded-lg">${pct}%</span></p>`}
           </div>
           <div class="mt-6 space-y-4">
             ${items.length ? items.map((t, i) => this.taskHTML(t, i + 1)).join('')
@@ -1916,11 +2529,18 @@
         const on = k === this.filter;
         const count = all.filter(t => t.stage === k).length;
         const text = k === 'all' ? 'Ver todas' : `${i + 1}. ${STAGES[k]} (${count} ${count === 1 ? 'tarea' : 'tareas'})`;
-        return `<button class="stage-filter px-4 py-2.5 rounded-xl text-sm font-bold transition ${on ? 'bg-nexa-orange text-white' : 'bg-nexa-mist text-nexa-ink/75 hover:bg-nexa-beige'}" data-stage="${k}" role="tab" aria-selected="${on}">${text}</button>`;
+        const locked = this.locked(k);
+        const cls = k === 'all' ? (on ? 'bg-nexa-ink text-white' : 'bg-nexa-mist text-nexa-ink/75 hover:bg-nexa-beige')
+          : locked ? 'bg-nexa-mist text-nexa-ink/50 cursor-not-allowed'
+          : `tone-${k} ${on ? 't-bg text-white' : 't-soft t-text hover:brightness-95'}`;
+        return `<button class="stage-filter ${cls} px-4 py-2.5 rounded-xl text-sm font-bold transition inline-flex items-center gap-2" data-stage="${k}" role="tab" aria-selected="${on}" ${locked ? `aria-disabled="true" title="${this.lockedMsg(k)}"` : ''}>${locked ? '<i data-lucide="lock" class="!w-4 !h-4"></i>' : ''}<span>${text}</span></button>`;
       }).join('');
       $('#stagePrev').disabled = idx === 0;
       $('#stageNext').disabled = idx === STAGE_ORDER.length - 1;
-      $('#stageNext span').textContent = idx < STAGE_ORDER.length - 1 ? `Siguiente: ${label(STAGE_ORDER[idx + 1])}` : 'Siguiente';
+      const nextK = STAGE_ORDER[idx + 1], nextLocked = nextK && this.locked(nextK);
+      $('#stageNext').classList.toggle('opacity-50', !!nextLocked);
+      $('#stageNext span').innerHTML = (nextLocked ? '<i data-lucide="lock" class="!w-4 !h-4 inline -mt-0.5 mr-1"></i>' : '')
+        + esc(idx < STAGE_ORDER.length - 1 ? `Siguiente: ${label(nextK)}` : 'Siguiente');
     },
     // Navegación al pie de una etapa: volver a la anterior y avanzar a la siguiente
     stageFooterHTML() {
@@ -1929,12 +2549,21 @@
       const back = prev
         ? `<button class="stage-jump rounded-2xl border-2 border-black/10 hover:border-nexa-ink bg-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2" data-stage="${prev}"><i data-lucide="arrow-left"></i> Volver a ${STAGES[prev]}</button>`
         : '<span></span>';
-      const fwd = next !== 'all'
+      const fwd = next !== 'all' && this.locked(next)
+        ? `<button class="stage-jump rounded-2xl bg-nexa-mist text-nexa-ink/55 px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2 cursor-not-allowed" data-stage="${next}"><i data-lucide="lock"></i> Continuar a ${STAGES[next]}</button>`
+        : next !== 'all'
         ? `<button class="stage-jump rounded-2xl bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2" data-stage="${next}">Continuar a ${STAGES[next]} <i data-lucide="arrow-right"></i></button>`
         : '<span class="rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-800 px-4 py-2.5 text-sm font-bold inline-flex items-center gap-2"><i data-lucide="circle-check"></i> ¡Última etapa del intercambio!</span>';
       return `<div class="flex flex-wrap items-center justify-between gap-3">${back}${fwd}</div>`;
     },
+    // Abre una etapa solo si está desbloqueada; si no, avisa qué falta
+    canOpen(stage) {
+      if (!this.locked(stage)) return true;
+      toast('🔒 ' + this.lockedMsg(stage));
+      return false;
+    },
     go(stage) {
+      if (!this.canOpen(stage)) return;
       this.filter = stage; this.render();
       if ($('#stageCard').getBoundingClientRect().top < 0) $('#stageCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
@@ -1960,13 +2589,15 @@
       $('#stageLegend').innerHTML = Object.entries(STAGES).map(([k, label]) => {
         const st = all.filter(t => t.stage === k), d = st.filter(t => Store.data.done[t.id]).length;
         const p = st.length ? Math.round(d / st.length * 100) : 0;
+        const locked = this.locked(k);
         return `<button class="legend-btn w-full text-left group" data-stage="${k}">
-          <div class="flex justify-between text-sm font-semibold"><span class="group-hover:text-nexa-orange">${label}</span><span class="text-nexa-ink/60">${d}/${st.length}</span></div>
-          <div class="mt-1.5 h-2 rounded-full bg-nexa-mist overflow-hidden"><div class="h-full rounded-full bg-nexa-ink transition-all duration-700" style="width:${p}%"></div></div>
+          <div class="tone-${k} flex justify-between text-sm font-semibold"><span class="flex items-center gap-2 group-hover:underline underline-offset-2 ${locked ? 'text-nexa-ink/55' : ''}">${locked ? '<i data-lucide="lock" class="!w-3.5 !h-3.5"></i>' : '<span class="w-2.5 h-2.5 rounded-full t-bg"></span>'}${label}</span><span class="t-text font-bold">${d}/${st.length}</span></div>
+          <div class="tone-${k} mt-1.5 h-2.5 rounded-full t-soft overflow-hidden"><div class="h-full rounded-full t-bg transition-all duration-700" style="width:${p}%"></div></div>
         </button>`;
       }).join('');
 
-      const next = all.find(t => !Store.data.done[t.id]);
+      // Siguiente tarea pendiente en orden de etapas (las personales van dentro de su etapa)
+      const next = STAGE_ORDER.flatMap(k => all.filter(t => t.stage === k)).find(t => !Store.data.done[t.id]);
       const box = $('#nextTask');
       box.innerHTML = pct === 100
         ? '<strong>¡Setup completo!</strong> Ya estás instaladx en Madrid.'
@@ -1996,14 +2627,37 @@
   $('#taskList').addEventListener('change', e => {
     if (!e.target.classList.contains('task-check')) return;
     const id = e.target.closest('.task').dataset.id;
+    const wasLocked = STAGE_ORDER.filter(k => Setup.locked(k));
     if (e.target.checked) Store.data.done[id] = true; else delete Store.data.done[id];
     Store.save(); Setup.render();
+    const unlocked = wasLocked.find(k => !Setup.locked(k));
+    if (unlocked) toast(`🎉 ¡Etapa completada! Se desbloqueó «${STAGES[unlocked]}».`);
     const box = $(`.task[data-id="${CSS.escape(id)}"] .task-check`);
     if (box) box.focus();
   });
   $('#taskList').addEventListener('click', e => {
     const jump = e.target.closest('.stage-jump');
     if (jump) return Setup.go(jump.dataset.stage);
+    const lock = e.target.closest('.task-lock');
+    if (lock) return toast('🔒 ' + Setup.lockedMsg(lock.closest('.task').className.match(/tone-(\w+)/)[1]));
+    // Detalle visual: palomear documentos y marcar hasta qué paso vas
+    const goBtn = e.target.closest('.task-go');
+    if (goBtn) return App.show(goBtn.dataset.view);
+    const docTile = e.target.closest('.doc-tile'), stepDot = e.target.closest('.step-dot');
+    if (docTile || stepDot) {
+      const id = e.target.closest('.task').dataset.id;
+      const all = Store.data.taskProgress || (Store.data.taskProgress = {});
+      const prog = all[id] || (all[id] = { docs: [], steps: 0 });
+      if (docTile) {
+        const i = +docTile.dataset.i, k = prog.docs.indexOf(i);
+        k >= 0 ? prog.docs.splice(k, 1) : prog.docs.push(i);
+      } else {
+        const i = +stepDot.dataset.i;
+        prog.steps = prog.steps === i + 1 ? i : i + 1; // tocar el último hecho lo desmarca
+      }
+      Store.save(); Setup.render();
+      return;
+    }
     const mapBtn = e.target.closest('.task-map');
     if (mapBtn) {
       App.show('map');
@@ -2022,13 +2676,13 @@
     }
   });
   $('#stageFilters').addEventListener('click', e => {
-    const b = e.target.closest('.stage-filter'); if (!b) return;
+    const b = e.target.closest('.stage-filter'); if (!b || !Setup.canOpen(b.dataset.stage)) return;
     Setup.filter = b.dataset.stage; Setup.render();
   });
   $('#stagePrev').addEventListener('click', () => Setup.go(STAGE_ORDER[STAGE_ORDER.indexOf(Setup.filter) - 1]));
   $('#stageNext').addEventListener('click', () => Setup.go(STAGE_ORDER[STAGE_ORDER.indexOf(Setup.filter) + 1]));
   $('#stageLegend').addEventListener('click', e => {
-    const b = e.target.closest('.legend-btn'); if (!b) return;
+    const b = e.target.closest('.legend-btn'); if (!b || !Setup.canOpen(b.dataset.stage)) return;
     Setup.filter = b.dataset.stage; Setup.render();
   });
   $('#ringBtn').addEventListener('click', () => $('#nextTask').classList.toggle('hidden'));
@@ -2069,6 +2723,9 @@
         t.toggleAttribute('aria-current', on);
       });
       this.moveIndicator();
+      if (view === 'home') Home.render();
+      if (view === 'profile') ProfilePage.render();
+      if (view === 'housing') { Housing.type = null; Housing.render(); }
       if (view === 'setup') Setup.render();
       if (view === 'ask') { Ask.init(); setTimeout(() => $('#chatInput').focus(), 50); }
       if (view === 'map') StudentMap.init();
@@ -2077,7 +2734,8 @@
     },
     moveIndicator() {
       const tab = $(`#appNav .app-tab[data-view="${this.view}"]`), ind = $('#appNavIndicator');
-      if (!tab || !tab.offsetWidth) return;
+      if (!tab) { ind.style.width = '0'; return; }
+      if (!tab.offsetWidth) return;
       ind.style.width = tab.offsetWidth + 'px';
       ind.style.transform = `translateX(${tab.offsetLeft}px)`;
     },
@@ -2090,7 +2748,7 @@
       NavIndicator.move('inicio');
     }
   };
-  $$('.app-tab').forEach(t => t.addEventListener('click', () => App.show(t.dataset.view)));
+  $$('.app-tab, .home-go').forEach(t => t.addEventListener('click', () => App.show(t.dataset.view)));
   $$('.back-setup').forEach(b => b.addEventListener('click', () => App.show('setup')));
   window.addEventListener('resize', () => App.moveIndicator());
   if (document.fonts) document.fonts.ready.then(() => App.moveIndicator());
@@ -2152,12 +2810,153 @@
       return;
     }
     Drawer.close();
-    if (go === 'home') App.home();
-    else if (go === 'transporte') { App.show('map'); StudentMap.cat = 'transporte'; StudentMap.update(); }
+    if (go === 'transporte') App.show('transport');
+    else if (go === 'alojamiento') App.show('housing');
     else if (go === 'settings') Settings.open();
     else if (go === 'logout') $('#logoutBtn').click();
     else App.show(go);
   });
+  // Transporte: "¿Dónde la consigo?" abre el Student Map en los intercambiadores
+  $('.tr-map').addEventListener('click', () => {
+    App.show('map'); StudentMap.cat = 'transporte'; StudentMap.update();
+    setTimeout(() => StudentMap.select('moncloa'), 200);
+  });
+
+  /* ---------------------------------------------------------------
+     6f. Alojamiento: residencias, coliving y pisos según la zona
+  --------------------------------------------------------------- */
+  // Rangos orientativos en €/mes: [residencia, coliving, habitación en piso]
+  const HOUSING_ZONES = {
+    'Madrid centro': { prices: ['800–1.300', '750–1.100', '550–800'], tip: 'Lo tienes todo a pie, pero es la zona más cara.' },
+    'Pozuelo de Alarcón': { prices: ['700–1.100', '650–950', '450–650'], tip: 'Tranquilo y cerca de campus como ESIC. Te mueves en bus interurbano o Metro Ligero.' },
+    'Moncloa / Ciudad Universitaria': { prices: ['700–1.200', '700–1.000', '500–700'], tip: 'La zona universitaria por excelencia, con muchos colegios mayores.' },
+    'Getafe': { prices: ['550–900', '550–800', '350–500'], tip: 'Más barato y conectado por Cercanías y Metrosur.' },
+    'Alcalá de Henares': { prices: ['550–900', '500–750', '300–450'], tip: 'Ciudad universitaria con mucho ambiente, a unos 40 min en Cercanías.' },
+    'Aeropuerto Madrid-Barajas': { prices: ['600–950', '600–850', '400–550'], tip: 'Útil si estudias o trabajas por el aeropuerto o IFEMA; queda lejos del centro.' }
+  };
+  const HOUSING_TYPES = [
+    { key: 'res', title: 'Residencia de estudiantes', kicker: 'Lo más fácil al llegar', icon: 'building-2',
+      img: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=70',
+      text: 'Habitación individual o doble en un edificio solo para estudiantes. Muchas incluyen limpieza, wifi y a veces comidas.',
+      pros: ['Todo incluido', 'Fácil hacer amigxs', 'Contrato por curso'], con: 'Suele ser la opción más cara',
+      links: z => [['Buscar en Google Maps', `https://www.google.com/maps/search/residencia+de+estudiantes+${encodeURIComponent(z)}`]] },
+    { key: 'col', title: 'Coliving', kicker: 'Lo mejor de los dos mundos', icon: 'sofa',
+      img: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=70',
+      text: 'Tu habitación privada y zonas comunes compartidas (cocina, salón, coworking) con gente joven de todo el mundo.',
+      pros: ['Contratos flexibles', 'Ambiente internacional', 'Amueblado'], con: 'Plazas limitadas: reserva con tiempo',
+      links: z => [['Buscar en Google Maps', `https://www.google.com/maps/search/coliving+${encodeURIComponent(z)}`], ['HousingAnywhere', 'https://housinganywhere.com/Madrid--Spain']] },
+    { key: 'piso', title: 'Habitación en piso compartido', kicker: 'La opción más económica', icon: 'key-round',
+      img: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=70',
+      text: 'Alquilas una habitación en un piso con otras personas y compartes cocina y baño. Es lo que hace la mayoría de estudiantes.',
+      pros: ['Más barato', 'Más independencia', 'Muchas opciones'], con: 'Ojo con estafas: nunca pagues sin contrato',
+      links: () => [['Spotahome', 'https://www.spotahome.com/madrid'], ['Idealista', 'https://www.idealista.com/alquiler-habitacion/madrid-madrid/']] }
+  ];
+  // Opciones de ejemplo de cada tipo: precio según el rango de la zona (0 = más barato, 1 = más caro)
+  const HOUSING_PHOTOS = ['1562774053-701939374585', '1522708323590-d24dbb6b0267', '1502672260266-1c1ef2d93688', '1555396273-367ea4eb4db5']
+    .map(id => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=600&q=70`);
+  const HOUSING_OPTIONS = {
+    res: [
+      { name: 'Habitación doble en residencia', at: 0, metro: 8, photo: 0, feats: ['Limpieza semanal', 'Wifi', 'Sala de estudio'] },
+      { name: 'Habitación individual con baño', at: 0.5, metro: 5, photo: 1, feats: ['Baño privado', 'Gimnasio', 'Lavandería'] },
+      { name: 'Colegio mayor · pensión completa', at: 1, metro: 10, photo: 0, feats: ['Todas las comidas', 'Actividades', 'Limpieza diaria'] }
+    ],
+    col: [
+      { name: 'Habitación estándar en coliving', at: 0, metro: 6, photo: 1, feats: ['Cocina compartida', 'Eventos semanales', 'Amueblado'] },
+      { name: 'Habitación con baño privado', at: 0.5, metro: 4, photo: 3, feats: ['Baño privado', 'Coworking', 'Limpieza incluida'] },
+      { name: 'Estudio en coliving', at: 1, metro: 7, photo: 1, feats: ['Cocina propia', 'Gimnasio', 'Terraza común'] }
+    ],
+    piso: [
+      { name: 'Habitación en piso de 4', at: 0, metro: 10, photo: 2, feats: ['Gastos aparte', '3 compañerxs', 'Contrato por meses'] },
+      { name: 'Habitación exterior en piso de 3', at: 0.5, metro: 6, photo: 2, feats: ['Gastos incluidos', 'Mucha luz', 'Amueblada'] },
+      { name: 'Habitación con baño propio', at: 1, metro: 4, photo: 1, feats: ['Baño privado', 'Gastos incluidos', 'Cama doble'] }
+    ]
+  };
+  // "800–1.300" → precio en un punto del rango, redondeado a 10 €
+  const priceAt = (range, at) => {
+    const [lo, hi] = range.split('–').map(s => +s.replace('.', ''));
+    return Math.round((lo + (hi - lo) * at) / 10) * 10;
+  };
+  const euros = n => n.toLocaleString('es-ES');
+  const Housing = {
+    zone: null, type: null,
+    render() {
+      const zones = Object.keys(HOUSING_ZONES);
+      // Por defecto, la zona de destino del perfil
+      if (!this.zone) this.zone = zones.includes((Store.data.user || {}).destination) ? Store.data.user.destination : zones[0];
+      $('#housingZone').innerHTML = zones.map(z => `<option ${z === this.zone ? 'selected' : ''}>${esc(z)}</option>`).join('');
+      const zd = HOUSING_ZONES[this.zone];
+      $('#housingTip').textContent = zd.tip;
+      $('#housingCards').innerHTML = this.type ? this.listHTML(zd) : this.overviewHTML(zd);
+      icons();
+    },
+    // Paso 1: foto grande y una mini explicación de cada tipo
+    overviewHTML(zd) {
+      return `<div class="grid md:grid-cols-3 gap-5">${HOUSING_TYPES.map((t, i) => `
+        <button class="housing-type group text-left bg-white rounded-3xl border border-black/5 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-xl transition" data-type="${t.key}">
+          <span class="relative block aspect-[4/3] bg-nexa-beige overflow-hidden">
+            <img src="${t.img}" alt="" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.remove()">
+            <span class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></span>
+            <span class="absolute left-4 right-4 bottom-4 text-white">
+              <span class="block text-[11px] font-extrabold uppercase tracking-wider text-white/85">${t.kicker}</span>
+              <span class="block text-xl font-extrabold leading-tight">${t.title}</span>
+            </span>
+          </span>
+          <span class="p-5 flex flex-col flex-1">
+            <span class="text-sm text-nexa-ink/75 leading-relaxed flex-1">${t.text}</span>
+            <span class="mt-4 flex items-center justify-between gap-3">
+              <span class="text-sm"><span class="text-nexa-ink/55">Desde</span> <strong class="text-nexa-orangeDark">${euros(priceAt(zd.prices[i], 0))} €</strong><span class="text-nexa-ink/55">/mes</span></span>
+              <span class="rounded-full bg-nexa-orange group-hover:bg-nexa-orangeDark text-white px-4 py-2 text-sm font-bold inline-flex items-center gap-1.5">Ver opciones <i data-lucide="arrow-right" class="!w-4 !h-4"></i></span>
+            </span>
+          </span>
+        </button>`).join('')}</div>`;
+    },
+    // Paso 2: varias opciones con precio, distancia al metro y lo que incluyen
+    listHTML(zd) {
+      const i = HOUSING_TYPES.findIndex(t => t.key === this.type), t = HOUSING_TYPES[i];
+      return `
+        <div class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <button class="housing-back text-sm font-bold rounded-full px-4 py-2 bg-nexa-mist hover:bg-nexa-beige inline-flex items-center gap-1.5"><i data-lucide="arrow-left" class="!w-4 !h-4"></i> Todas las opciones</button>
+              <h2 class="mt-4 text-2xl font-extrabold inline-flex items-center gap-2"><i data-lucide="${t.icon}" class="text-nexa-orange"></i> ${t.title}</h2>
+              <p class="mt-1 text-sm text-nexa-ink/65">${t.text}</p>
+            </div>
+            <span class="rounded-2xl bg-nexa-orangeSoft text-nexa-orangeDark px-4 py-2.5 text-right leading-tight"><span class="block text-[10px] font-extrabold uppercase tracking-wider">${esc(this.zone)}</span><span class="font-extrabold">${zd.prices[i]} €</span><span class="text-xs font-semibold"> /mes</span></span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            ${t.pros.map(p => `<span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-nexa-green px-3 py-1 text-xs font-bold"><i data-lucide="check" class="!w-3.5 !h-3.5"></i>${p}</span>`).join('')}
+            <span class="inline-flex items-center gap-1 rounded-full bg-nexa-mist text-nexa-ink/70 px-3 py-1 text-xs font-bold"><i data-lucide="circle-alert" class="!w-3.5 !h-3.5"></i>${t.con}</span>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          ${HOUSING_OPTIONS[t.key].map(o => `
+            <article class="bg-white rounded-3xl border border-black/5 overflow-hidden flex flex-col">
+              <div class="relative aspect-[16/10] bg-nexa-beige">
+                <img src="${HOUSING_PHOTOS[o.photo]}" alt="" loading="lazy" class="w-full h-full object-cover" onerror="this.remove()">
+                <span class="absolute left-3 top-3 bg-white/95 text-nexa-ink text-[11px] font-extrabold rounded-full px-2.5 py-1">Ejemplo</span>
+              </div>
+              <div class="p-5 flex flex-col flex-1">
+                <p class="text-2xl font-extrabold">${euros(priceAt(zd.prices[i], o.at))} €<span class="text-sm font-semibold text-nexa-ink/55"> /mes</span></p>
+                <h3 class="mt-1 font-extrabold">${o.name}</h3>
+                <p class="mt-1 text-sm text-nexa-ink/65 inline-flex items-center gap-1.5"><i data-lucide="map-pin" class="!w-4 !h-4 text-nexa-orange"></i>${esc(this.zone)} · metro a ${o.metro} min</p>
+                <div class="mt-3 flex flex-wrap gap-1.5 flex-1 content-start">${o.feats.map(f => `<span class="rounded-full bg-nexa-mist text-nexa-ink/75 px-2.5 py-1 text-xs font-semibold">${f}</span>`).join('')}</div>
+                <a href="${esc(t.links(this.zone)[0][1])}" target="_blank" rel="noopener" class="mt-4 rounded-full border-2 border-black/10 hover:border-nexa-ink px-4 py-2.5 text-sm font-bold inline-flex items-center justify-center gap-2">Buscar similares <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>
+              </div>
+            </article>`).join('')}
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-sm">
+          <span class="text-nexa-ink/60">Ver disponibilidad real en:</span>
+          ${t.links(this.zone).map(([label, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener" class="rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-4 py-2 font-bold inline-flex items-center gap-1.5">${label} <i data-lucide="external-link" class="!w-3.5 !h-3.5"></i></a>`).join('')}
+        </div>`;
+    }
+  };
+  $('#housingZone').addEventListener('change', e => { Housing.zone = e.target.value; Housing.render(); });
+  $('#housingCards').addEventListener('click', e => {
+    const card = e.target.closest('.housing-type');
+    if (card) { Housing.type = card.dataset.type; Housing.render(); $('#view-housing').scrollIntoView({ block: 'start' }); }
+    if (e.target.closest('.housing-back')) { Housing.type = null; Housing.render(); }
+  });
+  $('.housing-roomies').addEventListener('click', () => { Home.cat = 'roomies'; App.show('home'); });
 
   /* ---------------------------------------------------------------
      Ajustes del perfil
@@ -2194,8 +2993,10 @@
   });
 
   /* ---------------------------------------------------------------
-     6a. Ask (IA simulada)
+     6a. Ask (IA con Gemini; si falla, respuestas guardadas)
   --------------------------------------------------------------- */
+  // Dirección del Worker de Cloudflare que guarda la clave de Gemini (vacía = solo respuestas guardadas)
+  const AI_URL = 'https://nexa-ai.a01286339.workers.dev/';
   const ANSWERS = [
     { k: ['tie', 'huella', 'nie', 'extranjero'], a: 'Para la <strong>TIE</strong>: 1) pide cita de «Toma de huellas» en la sede electrónica de Extranjería, 2) rellena el formulario <strong>EX-17</strong>, 3) paga la tasa <strong>790-012</strong>, 4) lleva pasaporte, visado, foto y certificado de empadronamiento. Hazlo durante el primer mes tras tu llegada.' },
     { k: ['padron', 'empadron'], a: 'El <strong>empadronamiento</strong> se hace en una Oficina de Atención a la Ciudadanía (Línea Madrid). Pide cita en madrid.es o llamando al <strong>010</strong>. Lleva pasaporte y tu contrato de alquiler (o autorización firmada del propietario).' },
@@ -2237,11 +3038,46 @@
       const hit = ANSWERS[i];
       return hit ? hit.a : 'Buena pregunta. Aún no tengo una respuesta verificada sobre eso 🤔. Te recomiendo consultarlo con la ORI de tu universidad o en <strong>Been There</strong>, donde exalumnos comparten su experiencia. Puedo ayudarte con visa, TIE, padrón, seguro, transporte, banco o SIM.';
     },
-    ask(q) {
-      q = q.trim(); if (!q) return;
+    // Respuesta de la IA (Gemini vía Cloudflare Worker) en texto simple → HTML seguro
+    format(text) {
+      const lines = esc(text)
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" rel="noopener" class="underline font-semibold">$1</a>')
+        .split('\n');
+      let html = '', list = false;
+      lines.forEach(l => {
+        const li = l.match(/^\s*[-*•]\s+(.*)/);
+        if (li) { if (!list) { html += '<ul class="list-disc pl-5 space-y-1 my-1">'; list = true; } html += `<li>${li[1]}</li>`; return; }
+        if (list) { html += '</ul>'; list = false; }
+        if (l.trim()) html += `<p class="my-1">${l}</p>`;
+      });
+      return html + (list ? '</ul>' : '');
+    },
+    history: [],
+    async ask(q) {
+      q = q.trim(); if (!q || this.busy) return;
+      this.busy = true;
       this.add('me', esc(q));
+      this.history.push({ role: 'me', text: q });
       const typing = this.add('bot', '<span class="typing" aria-label="Escribiendo"><span></span><span></span><span></span></span>');
-      setTimeout(() => { typing.remove(); this.add('bot', this.reply(q)); }, 650 + Math.random() * 500);
+      let html;
+      try {
+        if (!AI_URL) throw new Error('sin IA');
+        const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 20000);
+        const res = await fetch(AI_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: this.history.slice(-10) }), signal: ctrl.signal });
+        clearTimeout(timer);
+        const data = await res.json();
+        if (!res.ok || !data.text) throw new Error(data.error || res.status);
+        this.history.push({ role: 'bot', text: data.text });
+        html = this.format(data.text);
+      } catch (err) {
+        // Sin conexión con la IA: usamos las respuestas guardadas
+        html = this.reply(q);
+        await new Promise(r => setTimeout(r, 500));
+      }
+      typing.remove(); this.add('bot', html);
+      this.busy = false;
     }
   };
   $('#chatForm').addEventListener('submit', e => { e.preventDefault(); Ask.ask($('#chatInput').value); $('#chatInput').value = ''; });
@@ -2312,41 +3148,19 @@
       tip: 'Para el empadronamiento: pide cita en madrid.es o llamando al 010.', lat: 40.4190, lng: -3.6930 }
   ];
 
+  // Student Map con Google Maps insertado (sin clave): el mapa muestra el lugar elegido
+  // o, si no hay ninguno, una búsqueda de la categoría
+  const MAP_SEARCH = { all: 'Puerta del Sol, Madrid', salud: 'hospitales y farmacias en Madrid', uni: 'universidades en Madrid',
+    transporte: 'intercambiadores de transporte en Madrid', ocio: 'mercados y parques en Madrid', tramites: 'oficina de extranjería Madrid' };
+  const gmaps = {
+    embed: q => `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=15&hl=es&output=embed`,
+    open: q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`,
+    route: q => `https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=${encodeURIComponent(q)}`
+  };
+  const placeQuery = p => `${p.name}, ${p.address}`;
   const StudentMap = {
-    map: null, built: false, cat: 'all', query: '', active: null, markers: {},
-    init() {
-      if (!this.built) this.build();
-      setTimeout(() => { if (this.map) { this.map.invalidateSize(); this.fit(); } }, 80);
-    },
-    build() {
-      this.built = true;
-      if (window.L) {
-        this.map = L.map('map').setView([40.4268, -3.7038], 12);
-        // Mapa base de Esri: no pide clave y no bloquea la página abierta en local (Live Server).
-        // Si sus mosaicos fallan varias veces, se cambia a OpenStreetMap.
-        const esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-          maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors'
-        });
-        let tileErrors = 0;
-        esri.on('tileerror', () => {
-          if (++tileErrors !== 6) return;
-          this.map.removeLayer(esri);
-          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(this.map);
-        });
-        esri.addTo(this.map);
-        PLACES.forEach(p => {
-          this.markers[p.id] = L.marker([p.lat, p.lng], { icon: this.pin(false), title: p.name })
-            .bindPopup(`<strong>${esc(p.name)}</strong><br>${esc(p.address)}`)
-            .on('click', () => this.select(p.id, false));
-        });
-      } else {
-        $('#map').innerHTML = '<div class="h-full flex items-center justify-center p-8 text-center text-nexa-ink/60">No se pudo cargar el mapa. Comprueba tu conexión a internet.</div>';
-      }
-      this.update();
-    },
-    pin(active) {
-      return L.divIcon({ className: '', html: `<div class="nexa-pin${active ? ' active' : ''}"></div>`, iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] });
-    },
+    cat: 'all', query: '', active: null,
+    init() { this.update(); },
     visible() {
       const q = normalize(this.query.trim());
       return PLACES.filter(p => (this.cat === 'all' || p.cat === this.cat)
@@ -2367,10 +3181,23 @@
             <span class="flex gap-1.5"><i data-lucide="clock" class="text-nexa-ink/55 mt-px"></i>${esc(p.hours)}</span>
           </div>
           <p class="mt-3 text-xs leading-relaxed rounded-xl border border-nexa-orange/25 bg-nexa-orangeSoft/40 px-3.5 py-2.5"><strong class="text-nexa-orange">Tip NEXA:</strong> ${esc(p.tip)}</p>
+          <a href="${gmaps.route(placeQuery(p))}" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-nexa-ink hover:bg-black text-white px-4 py-2 text-xs font-bold"><i data-lucide="navigation" class="!w-3.5 !h-3.5"></i> Cómo llegar</a>
         </article>`;
+    },
+    // Actualiza el mapa de Google con el lugar activo o la búsqueda de la categoría
+    paintMap() {
+      const p = PLACES.find(x => x.id === this.active);
+      const q = p ? placeQuery(p) : MAP_SEARCH[this.cat] || MAP_SEARCH.all;
+      const frame = $('#gmapFrame'), src = gmaps.embed(q);
+      if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
+      $('#gmapTitle').textContent = p ? p.name : (this.cat === 'all' ? 'Madrid' : MAP_CATS[this.cat]);
+      $('#gmapOpen').href = gmaps.open(q);
+      $('#gmapRoute').href = gmaps.route(q);
+      $('#gmapRoute').classList.toggle('hidden', !p);
     },
     update() {
       const list = this.visible();
+      if (!list.some(p => p.id === this.active)) this.active = null;
       $('#mapFilters').innerHTML = [['all', 'Todos'], ...Object.entries(MAP_CATS)].map(([k, label]) => {
         const on = k === this.cat;
         return `<button class="map-chip px-3.5 py-2 rounded-xl text-sm font-semibold transition ${on ? 'bg-nexa-orange text-white' : 'bg-nexa-mist text-nexa-ink/80 hover:bg-nexa-beige'}" data-cat="${k}" role="tab" aria-selected="${on}">${label}</button>`;
@@ -2378,25 +3205,11 @@
       $('#placeCount').textContent = `${list.length} ${list.length === 1 ? 'lugar' : 'lugares'}`;
       $('#placeList').innerHTML = list.map(p => this.cardHTML(p)).join('')
         || '<div class="bg-white rounded-3xl p-8 text-center text-sm text-nexa-ink/60 border-2 border-dashed border-black/10">No encontramos lugares con esa búsqueda.</div>';
-      if (this.map) {
-        PLACES.forEach(p => {
-          const m = this.markers[p.id], show = list.includes(p);
-          if (show && !this.map.hasLayer(m)) m.addTo(this.map);
-          if (!show && this.map.hasLayer(m)) this.map.removeLayer(m);
-        });
-        this.fit(list);
-      }
+      this.paintMap();
       icons();
     },
-    fit(list = this.visible()) {
-      if (!this.map || !list.length) return;
-      if (list.length === 1) this.map.setView([list[0].lat, list[0].lng], 15);
-      else this.map.fitBounds(L.latLngBounds(list.map(p => [p.lat, p.lng])), { padding: [40, 40], maxZoom: 15 });
-    },
-    select(id, fly = true) {
+    select(id) {
       this.active = id;
-      const p = PLACES.find(x => x.id === id);
-      if (this.map) PLACES.forEach(x => this.markers[x.id].setIcon(this.pin(x.id === id)));
       $$('.place-card').forEach(c => {
         const on = c.dataset.id === id;
         c.classList.toggle('border-nexa-orange', on); c.classList.toggle('shadow-md', on);
@@ -2404,10 +3217,7 @@
       });
       const card = $(`.place-card[data-id="${id}"]`);
       if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      if (this.map && fly) {
-        this.map.flyTo([p.lat, p.lng], 16, { duration: .8 });
-        setTimeout(() => this.markers[id].openPopup(), 850);
-      }
+      this.paintMap();
     }
   };
   $('#mapFilters').addEventListener('click', e => {
@@ -2425,11 +3235,15 @@
      6c. Been There (foro)
   --------------------------------------------------------------- */
   const FORUM_CATS = {
-    alojamiento: { label: 'Alojamiento', tag: 'Alojamiento', icon: 'house' },
-    visas: { label: 'Visas y Trámites', tag: 'Visas & Trámites', icon: 'file-text' },
-    transporte: { label: 'Transporte y Abono', tag: 'Transporte & Abono', icon: 'bus' },
-    vida: { label: 'Vida en Madrid', tag: 'Vida en Madrid', icon: 'coffee' }
+    recom: { label: 'Recomendaciones', short: 'Recomendaciones', tag: 'Recomendación', icon: 'sparkles' },
+    alojamiento: { label: 'Alojamiento', short: 'Alojamiento', tag: 'Alojamiento', icon: 'house' },
+    visas: { label: 'Visas y Trámites', short: 'Trámites', tag: 'Visas & Trámites', icon: 'file-text' },
+    transporte: { label: 'Transporte y Abono', short: 'Transporte', tag: 'Transporte & Abono', icon: 'bus' },
+    roomies: { label: 'Busco roomie', short: 'Busco roomie', tag: 'Busco roomie', icon: 'users' }
   };
+  const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  // "2026-09-01" → "1 sep 2026"
+  const fmtDate = s => { const [y, m, d] = String(s).split('-').map(Number); return y && m && d ? `${d} ${MONTHS[m - 1]} ${y}` : ''; };
   const FLAGS = {
     'México': '🇲🇽', 'Colombia': '🇨🇴', 'Argentina': '🇦🇷', 'Chile': '🇨🇱', 'Perú': '🇵🇪', 'Ecuador': '🇪🇨', 'Brasil': '🇧🇷',
     'Estados Unidos': '🇺🇸', 'Canadá': '🇨🇦', 'Francia': '🇫🇷', 'Italia': '🇮🇹', 'Alemania': '🇩🇪', 'China': '🇨🇳'
@@ -2443,11 +3257,67 @@
     { id: 'mateo', author: 'Mateo Londoño', country: 'Colombia', from: 'Universidad de los Andes', to: 'UCM', cat: 'visas', likes: 112, at: daysAgo(5),
       body: "Para la cita de huellas (TIE) en Madrid: las comisarías liberan citas casi siempre los viernes por la mañana sobre las 09:30 o miércoles a primera hora. Ten tus datos en un bloc de notas para hacer 'copy-paste' súper rápido porque se agotan en 3 minutos." },
     { id: 'sofia', author: 'Sofía Martínez', country: 'Argentina', from: 'UADE', to: 'IE University', cat: 'transporte', likes: 89, at: daysAgo(8),
-      body: 'El Abono Joven de 20€ al mes es la maravilla más grande de Madrid. No solo te sirve para metro y autobús urbano; también puedes tomar los trenes de Cercanías para irte a pasar el día a Toledo, San Lorenzo de El Escorial o Aranjuez sin pagar ni un céntimo extra.' },
-    { id: 'diego', author: 'Diego Valenzuela', country: 'Chile', from: 'PUC Chile', to: 'ESIC Madrid', cat: 'vida', likes: 47, at: daysAgo(12),
-      body: 'Para estudiar con calma: la biblioteca María Zambrano en Moncloa abre en época de exámenes 24 horas y tiene un café excelente. Además, guarda tu carnet universitario: el Museo del Prado y el Centro de Arte Reina Sofía son 100% gratuitos para estudiantes.' }
+      body: 'El Abono Joven de 20€ al mes es la maravilla más grande de Madrid. No solo te sirve para metro y autobús urbano; también puedes tomar los trenes de Cercanías para irte a pasar el día a Alcalá de Henares, San Lorenzo de El Escorial o Aranjuez sin pagar ni un céntimo extra.' },
+    { id: 'diego', author: 'Diego Valenzuela', country: 'Chile', from: 'PUC Chile', to: 'ESIC Madrid', cat: 'recom', likes: 47, at: daysAgo(12),
+      body: 'Para estudiar con calma: la biblioteca María Zambrano en Moncloa abre en época de exámenes 24 horas y tiene un café excelente. Además, guarda tu carnet universitario: el Museo del Prado y el Centro de Arte Reina Sofía son 100% gratuitos para estudiantes.' },
+    // Publicaciones del muro de Inicio: video (portada que lleva a TikTok / Instagram / X) o ubicación en el Student Map
+    // Recomendaciones: video (portada que lleva a TikTok / Instagram) + lugar en el Student Map
+    { id: 'carolina', author: 'Carolina Paredes', country: 'Perú', from: 'PUCP', to: 'UCM', cat: 'recom', likes: 136, at: daysAgo(1),
+      body: 'Mi lugar favorito para comer rico y barato: el Mercado de San Ildefonso. Tiene puestos de todo el mundo y una terraza arriba. Hice un video con lo que pedí 👉',
+      media: { platform: 'tiktok', url: 'https://www.tiktok.com/search?q=mercado%20san%20ildefonso%20madrid', cover: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=70', title: 'Comer barato en Malasaña' },
+      place: { id: 'sanildefonso', cat: 'ocio', name: 'Mercado de San Ildefonso' },
+      comments: [{ author: 'Mateo Londoño', text: '¡Guardadísimo! Voy este finde 🙌', at: daysAgo(1) }] },
+    { id: 'paloma', author: 'Paloma Ruiz', country: 'Colombia', from: 'Javeriana', to: 'UCM', cat: 'recom', likes: 98, at: daysAgo(2),
+      body: 'Si necesitas desconectarte un rato, ve al atardecer al Templo de Debod. Es gratis y tiene las mejores vistas de Madrid 🌅 Grabé el atardecer para que vean.',
+      media: { platform: 'instagram', url: 'https://www.instagram.com/explore/search/keyword/?q=templo%20de%20debod', cover: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=600&q=70', title: 'Atardecer en Debod' },
+      place: { id: 'debod', cat: 'ocio', name: 'Templo de Debod' } },
+    { id: 'lucia', author: 'Lucía Fernández', country: 'Argentina', from: 'UBA', to: 'IE University', cat: 'recom', likes: 67, at: daysAgo(3),
+      body: 'Domingo perfecto: café para llevar y picnic en el Retiro, al lado del Palacio de Cristal. En el video les enseño el mejor rincón para sentarse ☕',
+      media: { platform: 'tiktok', url: 'https://www.tiktok.com/search?q=retiro%20madrid%20picnic', cover: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=70', title: 'Picnic en el Retiro' },
+      place: { id: 'retiro', cat: 'ocio', name: 'Parque del Retiro & Palacio de Cristal' } },
+    { id: 'erick', author: 'Erick Salazar', country: 'Ecuador', from: 'USFQ', to: 'IE University', cat: 'visas', likes: 58, at: daysAgo(3),
+      body: 'Ya tengo mi TIE 🎉 Fui a la comisaría de Policía Nacional del centro. Lleguen 15 minutos antes, con el EX-17 impreso, la tasa pagada y una foto tamaño carné.',
+      place: { id: 'policia', cat: 'tramites', name: 'Policía Nacional – Expedición de TIE' } },
+    { id: 'valentina', author: 'Valentina Rocha', country: 'Brasil', from: 'USP', to: 'ESIC Madrid', cat: 'transporte', likes: 74, at: daysAgo(4),
+      body: 'Subí un reel explicando cómo pedir el Abono Joven desde el celular en 5 minutos, con capturas de cada paso.',
+      media: { platform: 'instagram', url: 'https://www.instagram.com/explore/search/keyword/?q=abono%20joven%20madrid', cover: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=70', title: 'Abono Joven en 5 minutos' } },
+    { id: 'tomas', author: 'Tomás Jiménez', country: 'Chile', from: 'U. de Chile', to: 'ESIC Madrid', cat: 'alojamiento', likes: 33, at: daysAgo(7),
+      body: 'Hilo con los barrios que más recomiendo para estudiantes y cuánto pagué de habitación en cada uno.',
+      media: { platform: 'x', url: 'https://x.com/search?q=barrios%20madrid%20estudiantes', cover: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=900&q=70', title: 'Barrios para estudiantes en Madrid' } },
+    // Busco roomie: fechas, zona y presupuesto (+ video opcional de la resi o el piso)
+    { id: 'mariana', author: 'Mariana Torres', country: 'México', from: 'UNAM', to: 'UCM', cat: 'roomies', likes: 22, at: daysAgo(1),
+      body: 'Busco roomie (chica) para rentar juntas un piso de 2 habitaciones cerca de Sol. Soy tranquila, ordenada y me encanta cocinar 🍳 ¡Escríbeme!',
+      roomie: { from: '2026-09-01', to: '2026-12-20', zone: 'Sol', budget: 500 } },
+    { id: 'andres', author: 'Andrés Gómez', country: 'Colombia', from: 'Universidad de los Andes', to: 'UCM', cat: 'roomies', likes: 35, at: daysAgo(2),
+      body: 'Se libera una habitación en mi piso compartido en Moncloa, a 5 min del metro. Somos 3 estudiantes internacionales. Les dejo un tour en video 👉',
+      roomie: { from: '2027-01-10', to: '2027-06-30', zone: 'Moncloa', budget: 450 },
+      media: { platform: 'tiktok', url: 'https://www.tiktok.com/search?q=piso%20compartido%20madrid%20tour', cover: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=70', title: 'Tour de mi piso en Moncloa' },
+      place: { id: 'moncloa', cat: 'transporte', name: 'Intercambiador de Moncloa' } },
+    { id: 'camille', author: 'Camille Laurent', country: 'Francia', from: 'Sciences Po', to: 'ESIC Madrid', cat: 'roomies', likes: 18, at: daysAgo(4),
+      body: 'Estoy en una residencia en Chamberí y busco compañera para habitación doble el segundo semestre. Así se ve la resi 👉',
+      roomie: { from: '2027-02-01', to: '2027-06-15', zone: 'Chamberí', budget: 380 },
+      media: { platform: 'instagram', url: 'https://www.instagram.com/explore/search/keyword/?q=residencia%20estudiantes%20madrid', cover: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=70', title: 'Mi resi en Chamberí' } }
   ];
   if (!Store.data.forum) Store.data.forum = SEED_POSTS;
+  // "Vida en Madrid" ahora vive dentro de Recomendaciones
+  Store.data.forum.forEach(p => { if (!FORUM_CATS[p.cat]) p.cat = 'recom'; });
+  // Limpieza única: quitamos publicaciones y comentarios de prueba hechos desde esta cuenta
+  if (!Store.data.feedClean2) {
+    const seedIds = SEED_POSTS.map(s => s.id);
+    Store.data.forum = Store.data.forum.filter(p => seedIds.includes(p.id));
+    Store.data.forum.forEach(p => {
+      const seed = SEED_POSTS.find(s => s.id === p.id);
+      p.comments = (p.comments || []).filter(c => (seed.comments || []).some(sc => sc.text === c.text));
+    });
+    Store.data.feedClean2 = true; Store.save();
+  }
+  // Si ya había publicaciones guardadas, añadimos las nuevas de ejemplo sin borrar las del usuario
+  // (y actualizamos el contenido de las de ejemplo, conservando likes y comentarios)
+  SEED_POSTS.forEach(s => {
+    const p = Store.data.forum.find(x => x.id === s.id);
+    if (!p) return Store.data.forum.push(s);
+    ['cat', 'body', 'media', 'place', 'roomie'].forEach(k => { if (s[k]) p[k] = s[k]; else delete p[k]; });
+  });
   if (!Store.data.liked) Store.data.liked = [];
 
   const Forum = {
@@ -2501,24 +3371,395 @@
     Store.save(); Forum.render();
   });
   $('#openShare').addEventListener('click', () => openModal('shareModal'));
+
+  /* ---------------------------------------------------------------
+     6d. Inicio: perfil con bio + muro de la comunidad
+  --------------------------------------------------------------- */
+  const PLATFORMS = {
+    tiktok: { label: 'Ver en TikTok', bg: 'bg-nexa-ink' },
+    instagram: { label: 'Ver en Instagram', bg: 'bg-[#A4467F]' },
+    x: { label: 'Ver en X', bg: 'bg-nexa-ink' },
+    link: { label: 'Ver video', bg: 'bg-nexa-orange' }
+  };
+  const LIKE_OPTS = [['cafe', '☕ Café'], ['viajar', '✈️ Viajar'], ['museos', '🎨 Museos'], ['tapas', '🍷 Tapas'], ['futbol', '⚽ Fútbol'], ['musica', '🎵 Música'],
+    ['fiesta', '🪩 Fiesta'], ['deporte', '🏃 Deporte'], ['foto', '📸 Fotografía'], ['libros', '📚 Leer'], ['cocina', '🍳 Cocinar'], ['naturaleza', '🌿 Naturaleza']];
+  // Perfil de cada cuenta (bio, gustos, redes, foto), guardado por correo
+  if (!Store.data.profiles) Store.data.profiles = {};
+  Object.entries(Store.data.bios || {}).forEach(([mail, bio]) => { Store.data.profiles[mail] = { ...Store.data.profiles[mail], bio }; });
+  delete Store.data.bios;
+  const Profile = {
+    get() {
+      const mail = (Store.data.user || {}).email || 'anon';
+      if (!Store.data.profiles[mail] && mail === 'fer@nexa.mx') Store.data.profiles[mail] = {
+        bio: 'Estudiante de Marketing del Tec 🇲🇽 de intercambio en Madrid. Busco gente para ir a museos y probar todos los cafés de la ciudad.',
+        career: 'Marketing', hood: 'Chamberí', dates: 'Sep 2026 – Ene 2027', langs: 'Español, Inglés', likes: ['cafe', 'viajar', 'museos', 'tapas']
+      };
+      return Store.data.profiles[mail] || (Store.data.profiles[mail] = {});
+    },
+    avatar(el, ini) {
+      const photo = this.get().photo;
+      el.innerHTML = photo ? `<img src="${photo}" alt="Foto de perfil" class="w-full h-full object-cover">` : esc(ini);
+    },
+    user() { return Store.data.user || { name: 'Estudiante' }; },
+    // Números: publicaciones, likes recibidos, publicaciones que me gustaron y tareas completadas
+    stats() {
+      const u = this.user(), mine = Store.data.forum.filter(p => p.author === u.name), all = Setup.all();
+      return { mine, posts: mine.length, likes: mine.reduce((s, p) => s + p.likes, 0), liked: Store.data.liked.length,
+        done: all.filter(t => Store.data.done[t.id]).length, total: all.length };
+    },
+    aboutHTML() {
+      const u = this.user(), pr = this.get();
+      const about = [['school', u.university && `Intercambio en <strong>${esc(u.university)}</strong>`], ['book-open', pr.career && `Estudia <strong>${esc(pr.career)}</strong>`],
+        ['map-pin', pr.hood && `Vive en <strong>${esc(pr.hood)}</strong>`], ['calendar', pr.dates && esc(pr.dates)], ['languages', pr.langs && `Habla ${esc(pr.langs)}`]].filter(a => a[1]);
+      return about.map(([ic, txt]) => `<li class="flex items-center gap-2.5 text-nexa-ink/80"><i data-lucide="${ic}" class="!w-4 !h-4 text-nexa-orange shrink-0"></i><span>${txt}</span></li>`).join('')
+        || '<li class="text-nexa-ink/50">Añade qué estudias, tu barrio y tus fechas en «Editar perfil».</li>';
+    },
+    likesHTML() {
+      const likes = (this.get().likes || []).map(k => LIKE_OPTS.find(o => o[0] === k)).filter(Boolean);
+      return likes.map(([, l]) => `<span class="text-sm font-semibold bg-nexa-orangeSoft text-nexa-orangeDark rounded-full px-3 py-1.5">${l}</span>`).join('')
+        || '<span class="text-sm text-nexa-ink/50">Elige tus gustos en «Editar perfil».</span>';
+    },
+    socialHTML() {
+      const pr = this.get(), handle = h => esc(String(h).replace(/^@/, ''));
+      return [pr.ig && `<a href="https://www.instagram.com/${handle(pr.ig)}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-bold rounded-full bg-[#A4467F] text-white px-3.5 py-2"><i data-lucide="instagram" class="!w-4 !h-4"></i>@${handle(pr.ig)}</a>`,
+        pr.tt && `<a href="https://www.tiktok.com/@${handle(pr.tt)}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-bold rounded-full bg-nexa-ink text-white px-3.5 py-2"><i data-lucide="music-2" class="!w-4 !h-4"></i>@${handle(pr.tt)}</a>`].filter(Boolean).join('');
+    },
+    // Etapa actual: la primera de My Setup que aún tiene tareas pendientes
+    paintStage(el) {
+      const all = Setup.all();
+      const k = STAGE_ORDER.slice(0, 3).find(s => all.some(t => t.stage === s && !Store.data.done[t.id]));
+      const n = STAGE_ORDER.indexOf(k) + 1;
+      const pct = Math.round(all.filter(t => Store.data.done[t.id]).length / all.length * 100);
+      el.className = `mt-4 w-full text-left rounded-2xl px-4 py-3 transition hover:brightness-95 ${k ? `tone-${k} t-soft` : 'tone-set t-soft'}`;
+      el.innerHTML = `
+        <span class="flex items-center justify-between gap-3">
+          <span class="text-xs font-extrabold uppercase tracking-wider t-text">Etapa actual</span>
+          <span class="text-xs font-bold t-text">${pct}% completado</span>
+        </span>
+        <span class="mt-1 flex items-center gap-2 font-extrabold">
+          <span class="w-6 h-6 rounded-full t-bg text-white text-xs flex items-center justify-center">${k ? n : '✓'}</span>
+          ${k ? `Etapa ${n} · ${STAGES[k]}` : '¡Setup completo!'}
+          <i data-lucide="arrow-right" class="!w-4 !h-4 ml-auto t-text"></i>
+        </span>`;
+    }
+  };
+  const Home = {
+    cat: 'all',
+    openComments: new Set(),
+    render() {
+      const u = Store.data.user || { name: 'Estudiante' };
+      const pr = Profile.get();
+      const nick = u.nick || u.name.split(' ')[0];
+      const ini = Forum.initials(u.name);
+      $('#homeNick').textContent = nick;
+      $('#homeName').textContent = u.name;
+      Profile.avatar($('#homeAvatar'), ini); Profile.avatar($('#feedAvatar'), ini);
+      if (pr.photo) Profile.avatar($('#headAvatar'), ini);
+      $('#homeMeta').innerHTML = u.country ? `${FLAGS[u.country] || ''} ${esc(u.country)}` : '';
+
+      const st = Profile.stats();
+      const stat = (n, label) => `<div><p class="text-xl font-extrabold">${n}</p><p class="text-[11px] font-semibold text-nexa-ink/60">${label}</p></div>`;
+      $('#homeStats').innerHTML = stat(st.posts, st.posts === 1 ? 'Publicación' : 'Publicaciones')
+        + `<div class="border-x border-black/5">${stat(st.likes, 'Likes')}</div>`
+        + stat(`${st.done}/${st.total}`, 'Tareas');
+      $('#homeAbout').innerHTML = Profile.aboutHTML();
+      $('#homeLikes').innerHTML = Profile.likesHTML();
+      $('#homeSocial').innerHTML = Profile.socialHTML();
+      Profile.paintStage($('#homeStage'));
+      const bio = pr.bio || '';
+      $('#bioText').textContent = bio || 'Aún no tienes bio. Cuéntale a la comunidad quién eres ✨';
+      $('#bioText').classList.toggle('text-nexa-ink/50', !bio);
+      this.renderFeed();
+    },
+    postHTML(p, i) {
+      const liked = Store.data.liked.includes(p.id);
+      const comments = p.comments || [];
+      const open = this.openComments.has(p.id);
+      const m = p.media, pf = m && (PLATFORMS[m.platform] || PLATFORMS.link);
+      // Portada vertical del video (como un TikTok / reel) que abre la red social
+      const video = m ? `
+        <a href="${esc(m.url)}" target="_blank" rel="noopener" class="group block relative w-full sm:w-48 shrink-0 rounded-2xl overflow-hidden aspect-video sm:aspect-[3/4] bg-gradient-to-br from-nexa-orange to-nexa-orangeDark" aria-label="${pf.label}: ${esc(m.title || p.author)}">
+          ${m.cover ? `<img src="${esc(m.cover)}" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.remove()">` : ''}
+          <span class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20"></span>
+          <span class="absolute top-2.5 left-2.5 ${pf.bg} text-white text-[11px] font-bold rounded-full px-2.5 py-1 inline-flex items-center gap-1">${pf.label} <i data-lucide="external-link" class="!w-3 !h-3"></i></span>
+          <span class="absolute inset-0 flex items-center justify-center"><span class="w-14 h-14 rounded-full bg-white/90 text-nexa-ink flex items-center justify-center shadow-xl group-hover:scale-110 transition"><i data-lucide="play" class="!w-6 !h-6 ml-0.5 fill-current"></i></span></span>
+          <span class="absolute left-3 right-3 bottom-3 text-white text-sm font-extrabold leading-tight">${esc(m.title || 'Video')}</span>
+        </a>` : '';
+      // Enlace al lugar: abre el Student Map en ese punto
+      const place = p.place ? `
+        <button class="feed-place mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-nexa-green px-3.5 py-2 text-sm font-bold text-left transition" data-place="${esc(p.place.id)}" data-cat="${esc(p.place.cat)}">
+          <i data-lucide="map-pin" class="!w-4 !h-4 shrink-0"></i><span>${esc(p.place.name)}</span><span class="font-semibold text-nexa-ink/55">· Ver en el mapa</span>
+        </button>` : '';
+      // Fotos subidas: una grande, o en cuadrícula si son varias
+      const ph = p.photos || [];
+      const photos = ph.length ? `
+        <div class="mt-4 grid gap-2 ${ph.length === 1 ? '' : 'grid-cols-2'}">
+          ${ph.map((src, k) => `<img src="${src}" alt="Foto ${k + 1} de ${esc(p.author)}" loading="lazy" class="w-full rounded-2xl object-cover ${ph.length === 1 ? 'max-h-[26rem]' : 'aspect-square'} ${ph.length === 3 && k === 0 ? 'col-span-2 aspect-[2/1]' : ''}">`).join('')}
+        </div>` : '';
+      // Datos de "Busco roomie": fechas, zona y presupuesto
+      const r = p.roomie;
+      const chip = (ic, txt) => txt ? `<span class="inline-flex items-center gap-1.5 rounded-full bg-sky-50 text-nexa-blue px-3 py-1.5 text-sm font-bold"><i data-lucide="${ic}" class="!w-4 !h-4"></i>${txt}</span>` : '';
+      const roomie = r ? `
+        <div class="mt-3 flex flex-wrap gap-2">
+          ${chip('calendar', [fmtDate(r.from), fmtDate(r.to)].filter(Boolean).map(esc).join(' – '))}
+          ${chip('map-pin', r.zone && esc(r.zone))}
+          ${chip('euro', r.budget && `${esc(r.budget)} €/mes`)}
+        </div>` : '';
+      const head = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-11 h-11 rounded-full ${AVATAR_TONES[i % AVATAR_TONES.length]} font-extrabold flex items-center justify-center shrink-0">${esc(Forum.initials(p.author))}</span>
+              <div class="min-w-0">
+                <p class="text-sm truncate"><strong class="font-extrabold">${esc(p.author)}</strong>${p.country ? ` <span class="text-nexa-ink/70">${FLAGS[p.country] || ''} ${esc(p.country)}</span>` : ''}</p>
+                <p class="text-xs text-nexa-ink/55 mt-0.5">${[p.to, Forum.ago(p.at).replace('Actualizado ', '')].filter(Boolean).map(esc).join(' · ')}</p>
+              </div>
+            </div>
+            <span class="shrink-0 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-nexa-orangeSoft text-nexa-orangeDark">${esc(FORUM_CATS[p.cat].tag)}</span>
+          </div>
+          <p class="mt-4 text-[15px] leading-relaxed text-nexa-ink/85">${esc(p.body)}</p>
+          ${roomie}${photos}${place}`;
+      return `
+        <article class="bg-white rounded-3xl border border-black/5 p-5 sm:p-6" data-id="${esc(p.id)}">
+          ${m ? `<div class="flex flex-col sm:flex-row gap-5"><div class="min-w-0 flex-1">${head}</div>${video}</div>` : head}
+          <div class="mt-4 pt-3 border-t border-black/5 flex items-center gap-2">
+            <button class="feed-like inline-flex items-center gap-1.5 text-sm font-bold rounded-full px-3.5 py-2 transition ${liked ? 'bg-nexa-orange text-white' : 'hover:bg-nexa-mist text-nexa-ink/70'}" aria-pressed="${liked}"><i data-lucide="heart" class="!w-4 !h-4 ${liked ? 'fill-current' : ''}"></i> ${p.likes}</button>
+            <button class="feed-comments inline-flex items-center gap-1.5 text-sm font-bold rounded-full px-3.5 py-2 hover:bg-nexa-mist text-nexa-ink/70 transition" aria-expanded="${open}"><i data-lucide="message-circle" class="!w-4 !h-4"></i> ${comments.length} ${comments.length === 1 ? 'comentario' : 'comentarios'}</button>
+          </div>
+          ${open ? `
+          <div class="mt-3 space-y-3">
+            ${comments.map(c => `
+              <div class="flex gap-2.5">
+                <span class="w-8 h-8 rounded-full bg-nexa-mist text-nexa-ink/70 text-xs font-extrabold flex items-center justify-center shrink-0">${esc(Forum.initials(c.author))}</span>
+                <p class="bg-nexa-mist rounded-2xl rounded-tl-md px-3.5 py-2 text-sm"><strong class="font-extrabold">${esc(c.author)}</strong> ${esc(c.text)}</p>
+              </div>`).join('')}
+            <form class="feed-comment-form flex gap-2">
+              <input name="c" required maxlength="200" autocomplete="off" class="flex-1 min-w-0 rounded-full bg-nexa-mist border border-black/10 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-nexa-orange" placeholder="Escribe un comentario..." aria-label="Escribe un comentario">
+              <button class="rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white w-10 h-10 flex items-center justify-center shrink-0" aria-label="Enviar comentario"><i data-lucide="send" class="!w-4 !h-4"></i></button>
+            </form>
+          </div>` : ''}
+        </article>`;
+    },
+    renderFeed() {
+      $('#feedFilters').innerHTML = [['all', { label: 'Todo', icon: 'layout-grid' }], ...Object.entries(FORUM_CATS)].map(([k, c]) => {
+        const on = k === this.cat;
+        return `<button class="feed-cat shrink-0 px-4 py-2 rounded-full text-sm font-bold inline-flex items-center gap-1.5 transition ${on ? 'bg-nexa-ink text-white' : 'bg-nexa-mist text-nexa-ink/75 hover:bg-nexa-beige'}" data-cat="${k}" role="tab" aria-selected="${on}"><i data-lucide="${c.icon}" class="!w-4 !h-4"></i>${c.short || c.label}</button>`;
+      }).join('');
+      const posts = Store.data.forum.filter(p => this.cat === 'all' || p.cat === this.cat).sort((a, b) => b.at - a.at);
+      $('#feedList').innerHTML = posts.map((p, i) => this.postHTML(p, i)).join('')
+        || '<p class="bg-white rounded-3xl p-8 text-center text-nexa-ink/60 border-2 border-dashed border-black/10">Aún no hay publicaciones en este tema. ¡Sé la primera persona en compartir!</p>';
+      icons();
+    }
+  };
+  $('#feedFilters').addEventListener('click', e => { const b = e.target.closest('.feed-cat'); if (b) { Home.cat = b.dataset.cat; Home.renderFeed(); } });
+  // Al publicar desde Inicio, el tema empieza en el filtro que estás viendo
+  $('#feedCompose').addEventListener('click', () => {
+    if (Home.cat !== 'all') $('#postForm').cat.value = Home.cat;
+    syncPostForm();
+    openModal('shareModal');
+  });
+  // El formulario se adapta al tema: campos de roomie y texto de ayuda
+  const POST_HINTS = {
+    recom: 'Recomienda un lugar, un plan o un truco que te encantó...',
+    alojamiento: 'Cuéntanos cómo encontraste piso, qué te funcionó y qué evitarías...',
+    visas: 'Comparte cómo te fue con tu trámite y qué documentos llevaste...',
+    transporte: 'Cuéntanos tu experiencia con el abono, metro o bus...',
+    roomies: 'Cuéntanos qué buscas y cómo eres: horarios, hábitos, si eres tranquilx...'
+  };
+  const syncPostForm = () => {
+    const cat = $('#postForm').cat.value;
+    $('#roomieFields').classList.toggle('hidden', cat !== 'roomies');
+    $('#postForm').body.placeholder = POST_HINTS[cat] || '';
+  };
+  $('#postForm').cat.addEventListener('change', syncPostForm);
+  $('#openShare').addEventListener('click', syncPostForm);
+  $('#homeStage').addEventListener('click', () => App.show('setup'));
+  // Muro (Inicio) y publicaciones del perfil comparten las mismas acciones: like, comentarios y lugar
+  const refreshPosts = () => (App.view === 'profile' ? ProfilePage.render() : Home.renderFeed());
+  ['#feedList', '#ppPosts'].forEach(sel => {
+    $(sel).addEventListener('click', e => {
+      const art = e.target.closest('article'); if (!art) return;
+      const p = Store.data.forum.find(x => x.id === art.dataset.id);
+      if (e.target.closest('.feed-like')) {
+        const i = Store.data.liked.indexOf(p.id);
+        if (i >= 0) { Store.data.liked.splice(i, 1); p.likes--; } else { Store.data.liked.push(p.id); p.likes++; }
+        Store.save(); refreshPosts();
+      } else if (e.target.closest('.feed-comments')) {
+        Home.openComments.has(p.id) ? Home.openComments.delete(p.id) : Home.openComments.add(p.id);
+        refreshPosts();
+        const input = $(`${sel} article[data-id="${CSS.escape(p.id)}"] input`); if (input) input.focus();
+      } else if (e.target.closest('.feed-place')) {
+        const b = e.target.closest('.feed-place');
+        App.show('map'); StudentMap.cat = b.dataset.cat; StudentMap.update();
+        setTimeout(() => StudentMap.select(b.dataset.place), 200);
+      }
+    });
+    $(sel).addEventListener('submit', e => {
+      e.preventDefault();
+      const art = e.target.closest('article'), text = e.target.c.value.trim(); if (!text) return;
+      const p = Store.data.forum.find(x => x.id === art.dataset.id);
+      (p.comments = p.comments || []).push({ author: (Store.data.user || {}).name || 'Estudiante', text, at: Date.now() });
+      Store.save(); refreshPosts();
+      const input = $(`${sel} article[data-id="${CSS.escape(p.id)}"] input`); if (input) input.focus();
+    });
+  });
+  const openProfileEdit = () => {
+    const pr = Profile.get(), f = $('#profileForm');
+    ['bio', 'career', 'hood', 'dates', 'langs', 'ig', 'tt'].forEach(k => (f[k].value = pr[k] || ''));
+    $('#likeOptions').innerHTML = LIKE_OPTS.map(([k, l]) => `
+      <label class="cursor-pointer"><input type="checkbox" name="likes" value="${k}" class="peer sr-only" ${(pr.likes || []).includes(k) ? 'checked' : ''}>
+        <span class="inline-block text-sm font-semibold rounded-full px-3 py-1.5 border border-black/10 bg-white peer-checked:bg-nexa-orange peer-checked:text-white peer-checked:border-nexa-orange peer-focus-visible:ring-2 peer-focus-visible:ring-nexa-blue transition">${l}</span></label>`).join('');
+    openModal('profileModal');
+  };
+  // Después de cambiar el perfil, repintamos Inicio y la página de perfil
+  const refreshProfile = () => { Home.render(); if (App.view === 'profile') ProfilePage.render(); };
+  $('#profileEdit').addEventListener('click', openProfileEdit);
+  $('#profileForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(e.target), pr = Profile.get();
+    ['bio', 'career', 'hood', 'dates', 'langs', 'ig', 'tt'].forEach(k => (pr[k] = f.get(k).trim()));
+    pr.likes = f.getAll('likes');
+    Store.save(); closeModal($('#profileModal'));
+    refreshProfile(); toast('Perfil actualizado.');
+  });
+  // Foto de perfil: se reduce a 240 px para que quepa en el almacenamiento del navegador
+  document.addEventListener('change', e => {
+    if (!e.target.matches('#photoInput, .pp-photo')) return;
+    const file = e.target.files[0]; if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const s = 240, c = document.createElement('canvas'); c.width = c.height = s;
+      const side = Math.min(img.width, img.height);
+      c.getContext('2d').drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, s, s);
+      Profile.get().photo = c.toDataURL('image/jpeg', 0.82);
+      URL.revokeObjectURL(img.src); e.target.value = '';
+      Store.save(); refreshProfile(); toast('Foto actualizada.');
+    };
+    img.src = URL.createObjectURL(file);
+  });
+
+  /* ---------------------------------------------------------------
+     6e. Mi perfil: página completa con bio, números y publicaciones
+  --------------------------------------------------------------- */
+  const ProfilePage = {
+    tab: 'mine',
+    render() {
+      const u = Profile.user(), pr = Profile.get(), st = Profile.stats();
+      $('#ppName').textContent = u.name;
+      Profile.avatar($('#ppAvatar'), Forum.initials(u.name));
+      $('#ppMeta').innerHTML = [
+        '<span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wide bg-nexa-mist text-nexa-ink/75 px-2.5 py-1 rounded-full"><i data-lucide="graduation-cap" class="!w-3.5 !h-3.5"></i> Estudiante</span>',
+        u.country && `<span class="text-nexa-ink/70">${FLAGS[u.country] || ''} ${esc(u.country)}</span>`,
+        u.university && `<span class="text-nexa-ink/70 inline-flex items-center gap-1.5"><i data-lucide="school" class="!w-4 !h-4"></i>${esc(u.university)}</span>`
+      ].filter(Boolean).join('<span class="text-nexa-ink/25">·</span>');
+      const box = (n, label, ic) => `
+        <div class="rounded-2xl bg-nexa-cream border border-black/5 px-4 py-3.5 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-nexa-orangeSoft text-nexa-orangeDark flex items-center justify-center shrink-0"><i data-lucide="${ic}" class="!w-5 !h-5"></i></span>
+          <span><span class="block text-xl font-extrabold leading-none">${n}</span><span class="block mt-1 text-xs font-semibold text-nexa-ink/60">${label}</span></span>
+        </div>`;
+      $('#ppStats').innerHTML = box(st.posts, st.posts === 1 ? 'Publicación' : 'Publicaciones', 'layout-grid')
+        + box(st.likes, 'Likes recibidos', 'heart') + box(st.liked, 'Me gustaron', 'bookmark') + box(`${st.done}/${st.total}`, 'Tareas hechas', 'circle-check');
+      Profile.paintStage($('#ppStage')); $('#ppStage').classList.remove('mt-4');
+      $('#ppBio').textContent = pr.bio || 'Aún no tienes bio. Cuéntale a la comunidad quién eres ✨';
+      $('#ppBio').classList.toggle('text-nexa-ink/50', !pr.bio);
+      $('#ppAbout').innerHTML = Profile.aboutHTML();
+      $('#ppLikes').innerHTML = Profile.likesHTML();
+      $('#ppSocial').innerHTML = Profile.socialHTML();
+
+      $$('.pp-tab').forEach(t => {
+        const on = t.dataset.tab === this.tab;
+        t.classList.toggle('bg-nexa-ink', on); t.classList.toggle('text-white', on);
+        t.classList.toggle('text-nexa-ink/70', !on); t.classList.toggle('hover:bg-nexa-mist', !on);
+        t.setAttribute('aria-selected', on);
+      });
+      const posts = this.tab === 'mine' ? st.mine : Store.data.forum.filter(p => Store.data.liked.includes(p.id));
+      const empty = this.tab === 'mine'
+        ? `<p class="font-extrabold text-lg">Aún no has publicado nada</p><p class="mt-1 text-nexa-ink/60">Comparte una recomendación, busca roomie o cuenta tu experiencia.</p>
+           <button class="pp-new mt-4 rounded-full bg-nexa-orange hover:bg-nexa-orangeDark text-white px-5 py-2.5 text-sm font-bold inline-flex items-center gap-2"><i data-lucide="plus" class="!w-4 !h-4"></i> Crear mi primera publicación</button>`
+        : `<p class="font-extrabold text-lg">Aún no te ha gustado nada</p><p class="mt-1 text-nexa-ink/60">Toca el ❤️ en las publicaciones de Inicio y aparecerán aquí.</p>`;
+      $('#ppPosts').innerHTML = posts.sort((a, b) => b.at - a.at).map((p, i) => Home.postHTML(p, i)).join('')
+        || `<div class="bg-white rounded-3xl p-10 text-center border-2 border-dashed border-black/10">${empty}</div>`;
+      icons();
+    }
+  };
+  $$('.pp-tab').forEach(t => t.addEventListener('click', () => { ProfilePage.tab = t.dataset.tab; ProfilePage.render(); }));
+  $('.pp-edit').addEventListener('click', openProfileEdit);
+  $('.pp-back').addEventListener('click', () => App.show('home'));
+  $('#ppStage').addEventListener('click', () => App.show('setup'));
+  $('#ppPosts').addEventListener('click', e => { if (e.target.closest('.pp-new')) { $('#postForm').cat.value = 'recom'; syncPostForm(); openModal('shareModal'); } });
+  // Mi nombre o foto (menú, encabezado e Inicio) llevan al perfil
+  $$('.go-profile').forEach(b => b.addEventListener('click', () => { Drawer.close(); App.show('profile'); }));
   $('#postForm').addEventListener('submit', e => {
     e.preventDefault();
     const f = new FormData(e.target), u = Store.data.user || { name: 'Estudiante' };
     const body = f.get('body').trim(); if (!body) return;
-    Store.data.forum.unshift({
+    let video = f.get('video').trim();
+    if (video && !/^https?:\/\//i.test(video)) video = 'https://' + video;
+    const platform = /tiktok\.com/i.test(video) ? 'tiktok' : /instagram\.com/i.test(video) ? 'instagram' : /(x|twitter)\.com/i.test(video) ? 'x' : 'link';
+    const cat = f.get('cat');
+    const roomie = cat === 'roomies'
+      ? { from: f.get('rFrom'), to: f.get('rTo'), zone: f.get('rZone').trim(), budget: f.get('rBudget') }
+      : null;
+    const post = {
       id: 'p' + Date.now(), author: u.name, country: u.country || '', from: f.get('origin').trim(),
-      to: u.university || '', cat: f.get('cat'), body, likes: 0, at: Date.now()
-    });
-    Store.save(); Forum.cat = 'all'; Forum.render();
-    e.target.reset(); closeModal($('#shareModal'));
-    toast('¡Gracias! Tu experiencia ya está en Been There.');
+      to: u.university || '', cat, body, likes: 0, at: Date.now(),
+      ...(video ? { media: { platform, url: video, title: cat === 'roomies' ? 'Tour de mi piso' : 'Mi video' } } : {}),
+      ...(roomie ? { roomie } : {}),
+      ...(PostPhotos.list.length ? { photos: [...PostPhotos.list] } : {})
+    };
+    Store.data.forum.unshift(post);
+    // El navegador guarda ~5 MB: si las fotos no caben, publicamos sin ellas
+    let msg = '¡Gracias! Tu publicación ya está en la comunidad.';
+    if (JSON.stringify(Store.data).length > 4.5e6) { delete post.photos; msg = 'Publicado, pero sin fotos: ya no hay espacio en este navegador.'; }
+    $('#roomieFields').classList.add('hidden');
+    Store.save(); Forum.cat = 'all'; Forum.render(); Home.cat = 'all'; Home.render();
+    e.target.reset(); PostPhotos.clear(); closeModal($('#shareModal'));
+    toast(msg);
+  });
+
+  // Fotos de la publicación: se reducen a 900 px para que quepan en el navegador
+  const PostPhotos = {
+    list: [], max: 4,
+    clear() { this.list = []; this.render(); },
+    render() {
+      $$('#postPhotos .post-thumb').forEach(n => n.remove());
+      $('#postPhotoAdd').insertAdjacentHTML('beforebegin', this.list.map((src, i) => `
+        <div class="post-thumb relative aspect-square rounded-2xl overflow-hidden bg-white border border-black/10">
+          <img src="${src}" alt="Foto ${i + 1}" class="w-full h-full object-cover">
+          <button type="button" class="post-thumb-del absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white flex items-center justify-center" data-i="${i}" aria-label="Quitar foto ${i + 1}"><i data-lucide="x" class="!w-3.5 !h-3.5"></i></button>
+        </div>`).join(''));
+      $('#postPhotoAdd').classList.toggle('hidden', this.list.length >= this.max);
+      icons();
+    },
+    add(file) {
+      return new Promise(res => {
+        const img = new Image();
+        img.onload = () => {
+          const k = Math.min(1, 900 / Math.max(img.width, img.height));
+          const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          URL.revokeObjectURL(img.src); res(c.toDataURL('image/jpeg', 0.72));
+        };
+        img.onerror = () => res(null);
+        img.src = URL.createObjectURL(file);
+      });
+    }
+  };
+  $('#postPhotoInput').addEventListener('change', async e => {
+    for (const file of [...e.target.files].slice(0, PostPhotos.max - PostPhotos.list.length)) {
+      const src = await PostPhotos.add(file); if (src) PostPhotos.list.push(src);
+    }
+    e.target.value = ''; PostPhotos.render();
+  });
+  $('#postPhotos').addEventListener('click', e => {
+    const b = e.target.closest('.post-thumb-del'); if (!b) return;
+    PostPhotos.list.splice(+b.dataset.i, 1); PostPhotos.render();
   });
 
   /* ---------------------------------------------------------------
      Cookies: aviso al entrar y configuración
   --------------------------------------------------------------- */
   const Cookies = {
-    key: 'nexa-cookies-v1',
+    key: 'nexa-cookies-v2', // v2: se vuelve a preguntar una vez con el nuevo aviso
     load() { try { return JSON.parse(localStorage.getItem(this.key)); } catch (e) { return null; } },
     save(choice) {
       try { localStorage.setItem(this.key, JSON.stringify({ necessary: true, ...choice, date: new Date().toISOString() })); } catch (e) { /* sin almacenamiento */ }
@@ -2878,7 +4119,7 @@
     [`Preguntas frecuentes`, `Frequent questions`], [`¿Necesito visa?`, `Do I need a visa?`], [`Comprar una SIM`, `Get a SIM card`], [`¿Es una emergencia?`, `Is it an emergency?`],
     [`No esperes respuesta del chat: llama al 112.`, `Don't wait for the chat: call 112.`], [`Abrir SOS`, `Open SOS`], [`Conversación`, `Conversation`], [`En línea`, `Online`], [`Vista desde tu asiento`, `View from your seat`], [`Tu ciudad`, `Your city`], [`Estudiantes riendo juntos alrededor de una mesa`, `Students laughing together around a table`], [`Edificio universitario con jardín`, `University building with a lawn`], [`Atardecer en Madrid`, `Sunset in Madrid`],
     [`Vista de la Gran Vía de Madrid`, `View of Madrid's Gran Vía`], [`Edificio Metrópolis en Madrid`, `Metrópolis building in Madrid`], [`Atardecer sobre los tejados de Madrid`, `Sunset over Madrid's rooftops`], [`TARJETA DE EMBARQUE`, `BOARDING PASS`], [`DESDE`, `FROM`], [`HACIA`, `TO`], [`PASAJERX`, `PASSENGER`], [`Tú`, `You`],
-    [`PUERTA`, `GATE`], [`EMBARQUE`, `BOARDING`], [`Ahora`, `Now`], [`Embarcar`, `Board now`], [`Tu Madrid City Pack te espera`, `Your Madrid City Pack is waiting`],
+    [`PUERTA`, `GATE`], [`EMBARQUE`, `BOARDING`], [`Ahora`, `Now`], [`Embarcar`, `Board now`], [`NEXA te espera`, `NEXA is waiting`],
     [`ASIENTO`, `SEAT`], [`¡Bienvenidx`, `Welcome`], [`a Madrid!`, `to Madrid!`], [`Tu gente`, `Your people`], [`Tu campus`, `Your campus`],
     [`Atardeceres`, `Sunsets`], [`Bienvenida a NEXA`, `Welcome to NEXA`], [`Saltar intro`, `Skip intro`], [`Inicio`, `Home`], [`¿Qué es?`, `What is it?`],
     [`Funciones`, `Features`], [`Socios`, `Partners`], [`Iniciar sesión`, `Log in`], [`Mi panel`, `My dashboard`],
@@ -2891,7 +4132,7 @@
     [`YouTube (se abre en otra pestaña)`, `YouTube (opens in a new tab)`], [`Escribir a NEXA por correo`, `Email NEXA`],
     [`que ningún estudiante internacional se sienta solo ni perdido al llegar a Madrid. Convertimos trámites confusos en pasos claros y una ciudad desconocida en una comunidad.`,
       `no international student should feel alone or lost when arriving in Madrid. We turn confusing paperwork into clear steps and an unfamiliar city into a community.`],
-    [`NEXA · Madrid City Pack. Información orientativa: confirma siempre con las fuentes oficiales.`, `NEXA · Madrid City Pack. Guidance only: always confirm with official sources.`],
+    [`NEXA. Información orientativa: confirma siempre con las fuentes oficiales.`, `NEXA. Guidance only: always confirm with official sources.`],
 
     /* Hero y carrusel */
     [`Tu experiencia universitaria internacional`, `Your international university experience`], [`El portal digital para tu`, `The digital portal for your`],
@@ -2987,7 +4228,7 @@
     [`Movilidad LATAM – España`, `LATAM – Spain mobility`],
 
     /* Login, registro, recuperar */
-    [`BIENVENIDO`, `WELCOME`], [`Inicia sesión.`, `Log in.`], [`Entra a tu Madrid City Pack y explora la ciudad`, `Open your Madrid City Pack and explore the city`],
+    [`BIENVENIDO`, `WELCOME`], [`Inicia sesión.`, `Log in.`], [`Entra a NEXA y explora la ciudad`, `Open NEXA and explore the city`],
     [`Correo electrónico`, `Email`], [`Contraseña`, `Password`], [`¿Olvidaste tu contraseña?`, `Forgot your password?`],
     [`Cuenta demo: fer@nexa.mx · 123`, `Demo account: fer@nexa.mx · 123`], [`Entrar como coordinador (coordinador@nexa.mx · 123)`, `Log in as coordinator (coordinador@nexa.mx · 123)`],
     [`Entrar a NEXA`, `Enter NEXA`], [`¿Aún no tienes cuenta?`, `Don't have an account yet?`], [`Recupera tu acceso.`, `Recover your access.`],
@@ -3267,14 +4508,17 @@
     [`Antes de firmar, revisa la comisión de mantenimiento y la de retirada de efectivo en cajeros.`, `Before signing, check the maintenance fee and the ATM withdrawal fee.`],
 
     /* Ask */
-    [`Ask NEXA`, `Ask NEXA`], [`Asistente de trámites en Madrid · respuestas orientativas`, `Madrid paperwork assistant · guidance only`],
+    [`Bienvenidx a NEXA 👋`, `Welcome to NEXA 👋`], [`Todo lo que necesitas para instalarte en Madrid, en un solo lugar.`, `Everything you need to settle in Madrid, in one place.`],
+    [`Tus trámites paso a paso.`, `Your paperwork, step by step.`], [`Lugares útiles cerca de ti.`, `Useful places near you.`],
+    [`Pregúntale a la IA lo que sea.`, `Ask the AI anything.`], [`Experiencias de otros estudiantes.`, `Experiences from other students.`],
+    [`MY SETUP - Tu llegada, paso a paso.`, `MY SETUP - Your arrival, step by step.`], [`Ask IA`, `Ask AI`], [`Ask NEXA`, `Ask NEXA`],[`Asistente de trámites en Madrid · respuestas orientativas`, `Madrid paperwork assistant · guidance only`],
     [`¿Cómo pido la TIE?`, `How do I get my TIE?`], [`¿Dónde me empadrono?`, `Where do I register my address?`], [`¿Qué seguro necesito?`, `What insurance do I need?`],
     [`Abono de transporte`, `Transport pass`], [`Abrir cuenta bancaria`, `Open a bank account`], [`Escribe tu pregunta`, `Type your question`],
     [`Pregunta sobre visa, TIE, padrón, seguro...`, `Ask about visas, TIE, registration, insurance...`], [`Enviar`, `Send`],
 
     /* Student Map */
     [`Geolocalización oficial`, `Official geolocation`], [`STUDENT MAP - Tu ciudad, más clara.`, `STUDENT MAP - Your city, made clear.`],
-    [`Ahora sí, un mapa real que puedas mover y ampliar. Elige una zona para explorar.`, `A real map you can move and zoom. Pick an area to explore.`],
+    [`Con Google Maps: toca un lugar de la lista para verlo en el mapa y saber cómo llegar.`, `With Google Maps: tap a place on the list to see it on the map and get directions.`],
     [`Explora Madrid`, `Explore Madrid`], [`Buscar lugares`, `Search places`], [`Buscar por nombre, zona o metro...`, `Search by name, area or metro...`],
     [`Filtrar lugares`, `Filter places`], [`Todos`, `All`], [`Centros de salud / Farmacias`, `Health centers / Pharmacies`], [`Universidades`, `Universities`],
     [`Comida y Ocio`, `Food and leisure`], [`Trámites/Oficinas`, `Paperwork/Offices`], [`Horarios orientativos: confírmalos antes de ir.`, `Hours are approximate: check before you go.`],
@@ -3318,8 +4562,8 @@
       `"Watch out for upfront payments! Don't send a deposit to landlords without a signed contract and a verified DNI/NIE. I booked my first 7 days in a hostel near Gran Vía and visited 4 flats in person. I chose Chamberí and I'm 15 minutes by metro from everything."`],
     [`"Para la cita de huellas (TIE) en Madrid: las comisarías liberan citas casi siempre los viernes por la mañana sobre las 09:30 o miércoles a primera hora. Ten tus datos en un bloc de notas para hacer 'copy-paste' súper rápido porque se agotan en 3 minutos."`,
       `"For the fingerprint (TIE) appointment in Madrid: police stations almost always release slots on Friday mornings around 09:30 or first thing on Wednesdays. Keep your details in a notes app to copy-paste super fast, because they're gone in 3 minutes."`],
-    [`"El Abono Joven de 20€ al mes es la maravilla más grande de Madrid. No solo te sirve para metro y autobús urbano; también puedes tomar los trenes de Cercanías para irte a pasar el día a Toledo, San Lorenzo de El Escorial o Aranjuez sin pagar ni un céntimo extra."`,
-      `"The €20 a month Youth Pass is the best thing in Madrid. It's not just for the metro and city buses; you can also take Cercanías trains for day trips to Toledo, San Lorenzo de El Escorial or Aranjuez without paying a cent more."`],
+    [`"El Abono Joven de 20€ al mes es la maravilla más grande de Madrid. No solo te sirve para metro y autobús urbano; también puedes tomar los trenes de Cercanías para irte a pasar el día a Alcalá de Henares, San Lorenzo de El Escorial o Aranjuez sin pagar ni un céntimo extra."`,
+      `"The €20 a month Youth Pass is the best thing in Madrid. It's not just for the metro and city buses; you can also take Cercanías trains for day trips to Alcalá de Henares, San Lorenzo de El Escorial or Aranjuez without paying a cent more."`],
     [`"Para estudiar con calma: la biblioteca María Zambrano en Moncloa abre en época de exámenes 24 horas y tiene un café excelente. Además, guarda tu carnet universitario: el Museo del Prado y el Centro de Arte Reina Sofía son 100% gratuitos para estudiantes."`,
       `"For quiet study: the María Zambrano library in Moncloa opens 24 hours during exam season and has excellent coffee. Also, keep your student card: the Prado Museum and the Reina Sofía Art Center are 100% free for students."`],
 
@@ -3378,6 +4622,9 @@
     [/^Siguiente: (.+)$/, m => `Next: ${tr(m[1])}`],
     [/^Volver a (.+)$/, m => `Back to ${tr(m[1])}`],
     [/^Continuar a (.+)$/, m => `Continue to ${tr(m[1])}`],
+    [/^(🔒 )?Termina «(.+)» para desbloquear esta etapa\.$/, m => `${m[1] || ''}Finish “${tr(m[2])}” to unlock this stage.`],
+    [/^🎉 ¡Etapa completada! Se desbloqueó «(.+)»\.$/, m => `🎉 Stage complete! “${tr(m[1])}” is now unlocked.`],
+    [/^Tarea bloqueada: (.+)$/, m => `Locked task: ${tr(m[1])}`],
     [/^(\d+) lugar(es)?$/, m => `${m[1]} ${plural(m[1], 'place', 'places')}`],
     [/^Actualizado hace (\d+) días?$/, m => `Updated ${m[1]} ${plural(m[1], 'day', 'days')} ago`],
     [/^Me sirvió \((\d+)\)$/, m => `Helpful (${m[1]})`],
@@ -3484,7 +4731,7 @@
     { k: ['register', 'registration', 'town hall', 'address'], a: '<strong>Town hall registration (empadronamiento)</strong> is done at a Línea Madrid Citizen Service Office. Book at madrid.es or call <strong>010</strong>. Bring your passport and rental contract (or the owner\'s signed authorization).' },
     { k: ['insurance', 'insurer', 'policy'], a: 'Your <strong>health insurance</strong> must have no co-payments, no waiting periods, full coverage in Spain and repatriation. Ask the insurer for a certificate in Spanish that says so explicitly: the consulate checks it closely.' },
     { k: ['visa', 'consulate'], a: 'If you\'re staying more than 90 days and aren\'t an EU citizen, you need a <strong>student visa (type D)</strong> from the Spanish Consulate in your country. You can see the general requirements in the public "Check your visa requirements" feature.' },
-    { k: ['pass', 'transport', 'metro', 'bus', 'card'], a: 'If you\'re under 26, apply for the <strong>Youth Pass (Abono Joven)</strong> on the Madrid Transport Consortium website. It covers Metro, EMT buses, Cercanías trains and intercity buses. Until it arrives, use the Multi card.' },
+    { k: ['pass', 'transport', 'metro', 'bus', 'travel card'], a: 'If you\'re under 26, apply for the <strong>Youth Pass (Abono Joven)</strong> on the Madrid Transport Consortium website. It covers Metro, EMT buses, Cercanías trains and intercity buses. Until it arrives, use the Multi card.' },
     { k: ['bank', 'account', 'iban'], a: 'To open a <strong>bank account</strong> you\'ll usually need your passport, NIE/TIE and town hall registration. Look for fee-free student accounts or a neobank with a Spanish IBAN to get started quickly.' },
     { k: ['sim', 'phone', 'mobile', 'line'], a: 'Buy a <strong>prepaid SIM</strong> with your passport at any carrier store. You\'ll need a Spanish number for text codes from the bank and official appointments.' },
     { k: ['doctor', 'hospital', 'health', 'emergency', 'sick'], a: 'In an emergency call <strong>112</strong>. For regular visits, use your private insurer\'s network. On the <strong>Student Map</strong> tab you can filter by "Health centers".' },
@@ -3503,6 +4750,4 @@
 </script>
 </body>
 </html>
-
-
 
